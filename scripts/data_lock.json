@@ -1,0 +1,272 @@
+{
+  "data/raw/drug_labels/atezolizumab.json": {
+    "sha256": "3368dd9bd3859cc2262ae0ba5ceb0ec273ec5b8d7a7abad60a1d475832695054",
+    "size": 749212,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"atezolizumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/bevacizumab.json": {
+    "sha256": "67c06130f93cb74ad513193a579a625b8f1501a09bea6ae51f30d223f58fd267",
+    "size": 1403969,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"bevacizumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/cabozantinib.json": {
+    "sha256": "155bcaee4efd50f851f5f430995edd5b9d6972fbc89e41cc106a37816226e7cf",
+    "size": 451135,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"cabozantinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/cisplatin.json": {
+    "sha256": "041a1cc81e239afe05590c3638d92c9652337b30d99c6a399472811c47f7d6f4",
+    "size": 859002,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"cisplatin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/doxorubicin.json": {
+    "sha256": "d69fef0b024fa041348179b7000fcd4129562603a9e9d446c33dd1c4b4b3e2d4",
+    "size": 5653991,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"doxorubicin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/durvalumab.json": {
+    "sha256": "e016ee6e325a1db9fac477b204d1b7f7f1a2b9778c4dd227bad67a75a9d25011",
+    "size": 578162,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"durvalumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/ipilimumab.json": {
+    "sha256": "6eb060b3b11b5416c90d51d934b8c8513589f4e6306bc8bffddefb2d8bbd3963",
+    "size": 540983,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"ipilimumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/lenvatinib.json": {
+    "sha256": "ce0142e3bd035539d07c411179d5a9f0dfe2e0dae49e99963d88710cac3bebad",
+    "size": 324561,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"lenvatinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/mitomycin_c.json": {
+    "sha256": "8bcf88cd2e2f297df912311f3aed09e493568e008e61b1a8db5ffa8be740c1de",
+    "size": 926834,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"mitomycin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/nivolumab.json": {
+    "sha256": "8a5fc4447711c91576bb94d5aaefedb206618151134cd54b2f4c42a3c9001aee",
+    "size": 2289289,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"nivolumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/regorafenib.json": {
+    "sha256": "4e07c4f6f26ef5d191129563a613b346b5d3c174030b14b9fe132a1815cd1b5f",
+    "size": 178713,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"regorafenib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/sorafenib.json": {
+    "sha256": "2a812737e89993551ede37a8f5815d400d99002156b75da3c6332bee52363b3a",
+    "size": 1320681,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"sorafenib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/tremelimumab.json": {
+    "sha256": "ad9b52f5ce587a09630eb95f42794f62e78a7f417312fdf3aec12276f4d3b7e1",
+    "size": 193691,
+    "retrieved": "2026-11-05",
+    "source": "openFDA drug label API, generic name or product elements: \"tremelimumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/guidelines/b_cell.pdf": {
+    "sha256": "e691c3aac10e447efaaafce39eca2c343762744926271640245b6af7c86ef02d",
+    "size": 4650429,
+    "retrieved": "2026-11-05",
+    "source": "local: ../guidelines/b-cell.pdf",
+    "licence": "NCCN copyright and EULA: no redistribution, no use with any AI model or tool (notice in the PDF)",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/guidelines/breast_cancer.pdf": {
+    "sha256": "85dd05e19e7b7a2b84c4f0f4c35eb523796010b1365943d2a2b0dd0e28add899",
+    "size": 3852084,
+    "retrieved": "2026-11-05",
+    "source": "local: ../guidelines/breast cancer.pdf",
+    "licence": "NCCN copyright and EULA: no redistribution, no use with any AI model or tool (notice in the PDF)",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/guidelines/hcc.pdf": {
+    "sha256": "f9fc1b9aea9f202d1b99a66b21bdb155ed4f191c4cacd9a451aa4c4216592ab5",
+    "size": 1957144,
+    "retrieved": "2026-11-05",
+    "source": "local: ../guidelines/hcc.pdf",
+    "licence": "NCCN copyright and EULA: no redistribution, no use with any AI model or tool (notice in the PDF)",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/guidelines/hodgkins.pdf": {
+    "sha256": "d040a835f69041e7e1573a94b008eb83b76a159064bad26384ef8af1726d285f",
+    "size": 2053242,
+    "retrieved": "2026-11-05",
+    "source": "local: ../guidelines/hodgkins.pdf",
+    "licence": "NCCN copyright and EULA: no redistribution, no use with any AI model or tool (notice in the PDF)",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/guidelines/nscl.pdf": {
+    "sha256": "9137fd43bf41d3a4ad71dfb4d8de2bd4ae4504f3920f8963c58f0b68228d5fe6",
+    "size": 3853950,
+    "retrieved": "2026-11-05",
+    "source": "local: ../guidelines/nscl.pdf",
+    "licence": "NCCN copyright and EULA: no redistribution, no use with any AI model or tool (notice in the PDF)",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/guidelines/t_cell.pdf": {
+    "sha256": "e21b2940e9467cea7b4eabb015d9465234b8017fa3a37fffc3f1560a1848e1fc",
+    "size": 2787307,
+    "retrieved": "2026-11-05",
+    "source": "local: ../guidelines/t-cell.pdf",
+    "licence": "NCCN copyright and EULA: no redistribution, no use with any AI model or tool (notice in the PDF)",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/hcc_tace/HCC-TACE-Seg_clinical_data-V2.xlsx": {
+    "sha256": "e9d2683dc907819aa08e4027e085854f46464bec834a09e80fc83b19a89e092b",
+    "size": 128507,
+    "retrieved": "2026-11-05",
+    "source": "local: ~/Downloads/HCC-TACE-Seg_clinical_data-V2.xlsx; official: https://www.cancerimagingarchive.net/wp-content/uploads/HCC-TACE-Seg_clinical_data-V2.xlsx (DOI 10.7937/TCIA.5FNA-0924)",
+    "licence": "CC BY 4.0; TCIA citation required (Moawad et al. 2021)",
+    "redistributable": "yes (with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/bclc_2022_reig_manuscript.xml": {
+    "sha256": "50a54e6974013168224a594931dcf8c4ca29ae18efbeeb162d1e93c37776b4d9",
+    "size": 187372,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC8866082.1: Reig et al., J Hepatol 2022, BCLC update",
+    "licence": "PMC author manuscript, publisher copyright: 'available for text mining' and fair use; no CC licence",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/open_guidelines/bsg_hcc_2024.pdf": {
+    "sha256": "fe35166855c6bffedc772191ad0a3f4a4365753e7bed8e312ca9551597e53360",
+    "size": 1483045,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC11287576.1: British Society of Gastroenterology HCC guideline, Gut 2024",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/china_cnlc_hcc_2024.pdf": {
+    "sha256": "bce5bbe85c27fbf30bd7cfa2cd38e35d3660ec5a2f9b808cc0d003b781d2157d",
+    "size": 8194516,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC12503762.2: China Liver Cancer guideline 2024 edition, Liver Cancer 2025",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/klca_ncc_hcc_2022.pdf": {
+    "sha256": "0b7730f424461a3bb6acc90d62147ca67f8abe25122c899e6fd123db243f44da",
+    "size": 3963638,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC9597235.1: KLCA-NCC Korea HCC guideline, Clin Mol Hepatol 2022",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/sitc_hcc_immunotherapy_2021.pdf": {
+    "sha256": "380d615218f99a94061807a5548a1f66d0d2cad7ccbabb2b018c81767476511f",
+    "size": 644390,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC8438858.1: SITC HCC immunotherapy guideline, J Immunother Cancer 2021",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/tace_consensus_2023.pdf": {
+    "sha256": "0f717c03b12d03575533faa8dd44acd33ace2cc2c919392d729c58ce65562d27",
+    "size": 4959822,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC10366793.1: TACE expert-consensus recommendations, Clin Mol Hepatol 2023",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/references/irecist_2017_seymour_manuscript.xml": {
+    "sha256": "3cedfa82aa33e649d66daf7099d0b4fd9a109c2f12aee489046c4595779fff63",
+    "size": 99120,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC5648544.1: Seymour et al., Lancet Oncol 2017, iRECIST",
+    "licence": "PMC author manuscript, publisher copyright: 'available for text mining' and fair use; no CC licence",
+    "redistributable": "no",
+    "note": "Full text; the local PDF is only the abstract page"
+  },
+  "data/raw/references/irecist_sciencedirect_abstract_page.pdf": {
+    "sha256": "8c16d6147b1340018bd997975ba293cfb0bc44ffc9964f49400c0f1afb6faba8",
+    "size": 306554,
+    "retrieved": "2026-11-05",
+    "source": "local: ../for staging/iRECIST_ guidelines for response criteria for use in trials testing immunotherapeutics - ScienceDirect.pdf",
+    "licence": "Elsevier copyright; no open licence found (Crossref lists a text-mining licence only)",
+    "redistributable": "no",
+    "note": "Browser print of the ScienceDirect abstract page, not the full article"
+  },
+  "data/raw/references/mrecist_2010_lencioni_llovet_manuscript.xml": {
+    "sha256": "d1634182a996fd9700208f2701661fbaf9f56d54dcd52c2b9f998a90b58b3a42",
+    "size": 59010,
+    "retrieved": "2026-11-05",
+    "source": "PMC Cloud Service PMC12268942.1: Lencioni & Llovet, Semin Liver Dis 2010, mRECIST",
+    "licence": "PMC author manuscript, publisher copyright: 'available for text mining' and fair use; no CC licence",
+    "redistributable": "no",
+    "note": ""
+  },
+  "data/raw/references/recist_1_1.pdf": {
+    "sha256": "1a9fe310cc3b8e424b2157ff748cd1cac453f8f3b9439a6b947e6519088f4639",
+    "size": 803144,
+    "retrieved": "2026-11-05",
+    "source": "local: ../recist 1.1 (Eisenhauer et al., Eur J Cancer 2009)",
+    "licence": "Elsevier copyright; no open licence found (Crossref lists a text-mining licence only)",
+    "redistributable": "no",
+    "note": ""
+  }
+}
