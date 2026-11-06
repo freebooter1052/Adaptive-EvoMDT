@@ -112,8 +112,18 @@ DRUGS = {
     "sorafenib": "NEXAVAR", "lenvatinib": "LENVIMA", "regorafenib": "STIVARGA", "cabozantinib": "CABOMETYX",
     "atezolizumab": "TECENTRIQ", "bevacizumab": "AVASTIN", "durvalumab": "IMFINZI", "tremelimumab": "IMJUDO",
     "nivolumab": "OPDIVO", "ipilimumab": "YERVOY", "doxorubicin": None, "cisplatin": None, "mitomycin": None,
+    # Breast, lung and lymphoma agents and HCC antivirals, added for the four-cancer EvoMDT knowledge base.
+    "trastuzumab": "HERCEPTIN", "pertuzumab": "PERJETA", "tamoxifen": None, "letrozole": "FEMARA", "anastrozole": "ARIMIDEX",
+    "palbociclib": "IBRANCE", "abemaciclib": "VERZENIO", "capecitabine": "XELODA", "docetaxel": None, "paclitaxel": None,
+    "carboplatin": None, "pemetrexed": "ALIMTA", "osimertinib": "TAGRISSO", "pembrolizumab": "KEYTRUDA", "alectinib": "ALECENSA",
+    "gefitinib": "IRESSA", "erlotinib": None, "rituximab": "RITUXAN", "cyclophosphamide": None, "vincristine": None,
+    "bleomycin": None, "dacarbazine": None, "vinblastine": None, "brentuximab vedotin": "ADCETRIS", "methotrexate": None,
+    "ibrutinib": "IMBRUVICA", "entecavir": "BARACLUDE", "tenofovir disoproxil fumarate": "VIREAD",
 }
-DRUG_FILES = {name: ("mitomycin_c" if name == "mitomycin" else name) for name in DRUGS}
+DRUG_FILES = {
+    name: ("mitomycin_c" if name == "mitomycin" else name.replace(" ", "_"))
+    for name in DRUGS
+}
 
 ITEMS: list[Item] = [
     Item(1, f"{RAW}/hcc_tace/HCC-TACE-Seg_clinical_data-V2.xlsx", "copy",
@@ -143,6 +153,36 @@ ITEMS: list[Item] = [
          "SITC HCC immunotherapy guideline, J Immunother Cancer 2021"),
     _pmc(2, f"{RAW}/open_guidelines/tace_consensus_2023.pdf", "PMC10366793", 1, "pdf", "CC BY-NC",
          "TACE expert-consensus recommendations, Clin Mol Hepatol 2023"),
+    *[
+        _pmc(2, f"{RAW}/open_guidelines/{name}.pdf", pmcid, 1, "pdf", code, title)
+        for name, pmcid, code, title in [
+            ("breast_csbrs_invasive_2021", "PMC8116006", "CC BY-NC-ND", "CSBrS invasive breast cancer guideline, Chin Med J 2021"),
+            ("breast_csbrs_conserving_2021", "PMC8478397", "CC BY-NC-ND", "CSBrS breast-conserving surgery guideline, Chin Med J 2021"),
+            ("breast_csbrs_neoadjuvant_2024", "PMC11188867", "CC BY-NC-ND", "CSBrS neoadjuvant therapy guideline, Chin Med J 2024"),
+            ("breast_abc8_2026", "PMC13697336", "CC BY-NC-ND", "ABC8 advanced breast cancer consensus, Breast 2026"),
+            ("breast_asco_metastatic_2024", "PMC10793992", "CC BY", "ASCO resource-stratified metastatic breast cancer guideline, JCO Glob Oncol 2024"),
+            ("breast_hr_positive_early_2023", "PMC10391857", "CC BY", "HR-positive HER2-negative early breast cancer consensus, BMC Cancer 2023"),
+            ("breast_her2_positive_2021", "PMC7982071", "CC BY", "HER2-positive breast cancer consensus, Bosn J Basic Med Sci 2021"),
+            ("breast_radiotherapy_cee_2022", "PMC9272418", "CC BY", "Central-Eastern European breast radiotherapy guideline, Pathol Oncol Res 2022"),
+            ("lung_periop_nsclc_2025", "PMC12574511", "CC BY-NC-ND", "Perioperative multimodality NSCLC guideline, Chin Med J 2025"),
+            ("lung_periop_consensus_2022", "PMC9359944", "CC BY-NC-ND", "Perioperative NSCLC expert consensus, Transl Lung Cancer Res 2022"),
+            ("lung_sitc_immunotherapy_2022", "PMC9157337", "CC BY-NC", "SITC lung cancer immunotherapy guideline, J Immunother Cancer 2022"),
+            ("lung_goecp_seor_rt_2022", "PMC9052073", "CC BY-NC", "GOECP/SEOR NSCLC radiotherapy guideline, World J Clin Oncol 2022"),
+            ("lung_rt_metastatic_2022", "PMC9554677", "CC BY-NC-ND", "Radiotherapy in metastatic NSCLC consensus, Transl Lung Cancer Res 2022"),
+            ("lung_biomarkers_2023", "PMC10119050", "CC BY", "NSCLC predictive biomarker testing guideline, Clin Transl Oncol 2023"),
+            ("lung_egfr_early_2023", "PMC9813031", "CC BY", "Early-stage EGFR-mutated NSCLC Delphi consensus, Clin Transl Oncol 2023"),
+            ("lung_egfr_resistance_2024", "PMC11697410", "CC BY-NC-ND", "Management after third-generation EGFR-TKI resistance, Lancet Reg Health West Pac 2024"),
+            ("lymphoma_eha_lbcl_2025", "PMC12456099", "CC BY-NC-ND", "EHA large B-cell lymphoma guideline, Hemasphere 2025"),
+            ("lymphoma_bsh_lbcl_2024", "PMC7616447", "CC BY", "BSH newly diagnosed large B-cell lymphoma guideline, Br J Haematol 2024"),
+            ("lymphoma_seom_dlbcl_2023", "PMC10425474", "CC BY", "SEOM-GOTEL DLBCL guideline, Clin Transl Oncol 2023"),
+            ("lymphoma_eha_hodgkin_2026", "PMC13288861", "CC BY-NC-ND", "EHA Hodgkin lymphoma guideline, Hemasphere 2026"),
+            ("lymphoma_eha_follicular_2026", "PMC13680546", "CC BY-NC-ND", "EHA follicular lymphoma guideline, Hemasphere 2026"),
+            ("lymphoma_eha_mantle_2025", "PMC12541557", "CC BY-NC-ND", "EHA-EU MCL network guideline, Hemasphere 2025"),
+            ("lymphoma_sitc_immunotherapy_2020", "PMC7768967", "CC BY-NC", "SITC lymphoma immunotherapy guideline, J Immunother Cancer 2020"),
+            ("lymphoma_jsh_overview_2025", "PMC12014710", "CC BY", "JSH lymphoma guideline overview, Int J Hematol 2025"),
+            ("lymphoma_pcnsl_china_2022", "PMC9524012", "CC BY", "Primary CNS lymphoma consensus, J Hematol Oncol 2022"),
+        ]
+    ],
     _manual(f"{RAW}/open_guidelines/easl_hcc_2018.pdf", "https://doi.org/10.1016/j.jhep.2018.03.019",
             "EASL HCC CPG 2018", "Elsevier copyright; free to read on the publisher site; no open licence found",
             "Superseded by EASL 2025"),

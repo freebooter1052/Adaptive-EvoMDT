@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from .contracts import normalize_answer
+from .contracts import normalize_answer, resolve_output_contract
 from .models import (
     AgentOutput,
     CaseDossier,
@@ -41,6 +41,91 @@ def case_role_modifiers(case: CaseDossier) -> dict[SpecialistRoleName, float]:
     if "met" in case.question.lower() or "follow-up" in case.question.lower():
         modifiers["monitoring"] += 0.1
     return modifiers
+
+
+SEVERITY_RISK: dict[str, float] = {"absolute": 1.0, "major": 0.8, "moderate": 0.5, "minor": 0.2, "info": 0.0}
+# The paper defines S_conflict = alpha*D_semantic + beta*R_risk + gamma*I_implementation but publishes no
+# coefficients. These put risk first, in line with its safety-first resolution.
+CONFLICT_ALPHA, CONFLICT_BETA, CONFLICT_GAMMA = 0.3, 0.5, 0.2
+# n = 4 voting specialists: a two-thirds quorum means one faulty specialist cannot decide the outcome.
+CONSENSUS_QUORUM = 2 / 3
+_STOP_WORDS = {"a", "an", "the", "of", "for", "with", "and", "or", "as", "to", "in", "if", "on", "at", "by", "plus"}
+
+
+def conflict_severity_score(conflict: ConflictRecord) -> float:
+    voters = len(conflict.recommenders) + len(conflict.objectors)
+    semantic = len(conflict.objectors) / voters if voters else 0.5
+    implementation = 1.0 if conflict.conflict_type == "implementation" else 0.0
+    score = (
+        CONFLICT_ALPHA * semantic
+        + CONFLICT_BETA * SEVERITY_RISK.get(conflict.severity, 0.0)
+        + CONFLICT_GAMMA * implementation
+    )
+    return round(score, 4)
+
+
+def action_tokens(text: str) -> set[str]:
+    return {word for word in normalize_action(text).split() if word not in _STOP_WORDS}
+
+
+def actions_match(left: str, right: str, threshold: float = 0.6) -> bool:
+    """True when the smaller action's content words mostly appear in the other action."""
+    left_tokens, right_tokens = action_tokens(left), action_tokens(right)
+    if not left_tokens or not right_tokens:
+        return False
+    return len(left_tokens & right_tokens) / min(len(left_tokens), len(right_tokens)) >= threshold
+
+
+def weighted_consensus(
+    case: CaseDossier,
+    specialist_outputs: list[AgentOutput],
+    role_weights: dict[SpecialistRoleName, float],
+) -> dict[str, object]:
+    """Compute D_final = sum(w_i * C_i) per enum answer, with the case-adjusted role weights."""
+    effective = _role_weights_with_modifiers(case, role_weights)
+    allowed = {normalize_answer(option) for option in (case.options or [])}
+    tally: dict[str, float] = {}
+    votes: dict[str, str] = {}
+    for output in specialist_outputs:
+        answer = normalize_answer(output.answer_candidate)
+        if not answer or (allowed and answer not in allowed):
+            continue
+        votes[output.role] = answer
+        tally[answer] = tally.get(answer, 0.0) + effective[output.role] * output.confidence
+    total = sum(tally.values())
+    if not total:
+        return {"votes": votes, "tally": {}, "leader": None, "share": 0.0, "quorum_reached": False}
+    leader = max(tally, key=lambda key: tally[key])
+    share = tally[leader] / total
+    return {
+        "votes": votes,
+        "tally": {key: round(value, 4) for key, value in tally.items()},
+        "leader": leader,
+        "share": round(share, 4),
+        # At least 3 votes are required, or one or two agents could reach the quorum alone.
+        "quorum_reached": share >= CONSENSUS_QUORUM and len(votes) >= 3,
+    }
+
+
+def score_plan_items(
+    case: CaseDossier,
+    specialist_outputs: list[AgentOutput],
+    plan: list[PlanItem],
+    role_weights: dict[SpecialistRoleName, float],
+) -> None:
+    """Replace self-assigned scores with sum(w_i * C_i) over supporters, normalized by total weight."""
+    effective = _role_weights_with_modifiers(case, role_weights)
+    total = sum(effective.values()) or 1.0
+    for item in plan:
+        support = 0.0
+        for output in specialist_outputs:
+            supported = output.role == item.owner_role or any(
+                action.stance != "avoid" and actions_match(item.action, action.action)
+                for action in output.candidate_actions
+            )
+            if supported:
+                support += effective[output.role] * output.confidence
+        item.score = round(min(1.0, support / total), 4)
 
 
 def _safety_vetoes(safety_output: AgentOutput) -> dict[str, RiskAlert]:
@@ -140,7 +225,10 @@ def apply_safety_guardrail(
                 rejected_actions.append(action)
                 audit_trace.append(f"Guardrail removed accepted action '{action}' because Safety vetoed it.")
 
-    final_plan.sort(key=lambda item: (-item.score, item.priority, item.action))
+    score_plan_items(case, specialist_outputs, final_plan, role_weights)
+    for conflict in conflicts:
+        conflict.severity_score = conflict_severity_score(conflict)
+    final_plan.sort(key=lambda item: (item.priority, item.owner_role != "treatment", -item.score, item.action))
     accepted_actions = list(dict.fromkeys(accepted_actions))
     rejected_actions = list(dict.fromkeys(rejected_actions))
     effective_weights = _role_weights_with_modifiers(case, role_weights)
@@ -148,24 +236,45 @@ def apply_safety_guardrail(
     top_action = accepted_actions[0] if accepted_actions else safety_output.summary
     final_answer = _resolved_final_answer(case, coordinator_output, top_action)
 
+    consensus = weighted_consensus(case, specialist_outputs, role_weights)
+    if (
+        resolve_output_contract(case) is not None
+        and consensus["quorum_reached"]
+        and normalize_answer(final_answer) != consensus["leader"]
+    ):
+        audit_trace.append(
+            f"Weighted consensus ({consensus['share']:.0%} of vote weight for {consensus['leader']}) "
+            f"overrode the coordinator's answer '{final_answer}'."
+        )
+        final_answer = str(consensus["leader"])
+
     response_lines = [
         f"Case: {case.case_id} ({_case_label(case)})",
         f"Question: {case.question}",
     ]
     if case.task_type == "plan_eval":
-        response_lines.extend(
-            [
-                "",
-                f"Coordinator Summary: {coordinator_output.summary}",
-                "",
-                "Final MDT Recommendation:",
-            ]
-        )
+        response_lines.extend(["", f"Integrated MDT Recommendation: {final_answer}"])
+        if coordinator_output.diagnosis_and_staging:
+            response_lines.extend(["", f"Primary Diagnosis and Staging: {coordinator_output.diagnosis_and_staging}"])
+        response_lines.extend(["", "Treatment Plan:"])
         if final_plan:
             for item in final_plan:
-                response_lines.append(f"- {item.action} [{item.owner_role}, score={item.score:.2f}]")
+                cited = [
+                    f"{citation.source_id}, {citation.anchor}, {citation.version}"
+                    for citation in item.citations
+                    if citation.source_id
+                ]
+                evidence = f" | Evidence: {'; '.join(cited)}" if cited else " | Evidence: none retrieved"
+                response_lines.append(
+                    f"- {item.action} [{item.owner_role}, priority {item.priority}, consensus {item.score:.2f}]{evidence}"
+                )
         else:
             response_lines.append("- No safe consensus action was accepted.")
+        if coordinator_output.safety_assessment:
+            response_lines.extend(["", f"Safety Assessment: {coordinator_output.safety_assessment}"])
+        if coordinator_output.monitoring_protocol:
+            response_lines.extend(["", f"Monitoring Protocol: {coordinator_output.monitoring_protocol}"])
+        response_lines.extend(["", f"Overall Confidence: {coordinator_output.final_confidence:.2f}"])
     else:
         response_lines.extend(
             [
@@ -189,6 +298,10 @@ def apply_safety_guardrail(
     return CoordinatorDecision(
         final_plan=final_plan,
         final_answer=final_answer,
+        diagnosis_and_staging=coordinator_output.diagnosis_and_staging,
+        safety_assessment=coordinator_output.safety_assessment,
+        monitoring_protocol=coordinator_output.monitoring_protocol,
+        consensus=consensus,
         accepted_actions=accepted_actions,
         rejected_actions=rejected_actions,
         conflicts=conflicts,

@@ -25,6 +25,13 @@ WEIGHT_UPDATE_RULES: dict[str, dict[SpecialistRoleName, float]] = {
     "traceability_gap": {"diagnostic": 0.5, "treatment": 0.5},
 }
 PROMPT_REFINEMENT_ROLES: tuple[RoleName, ...] = (*SPECIALIST_ROLES, "coordinator")
+# Self-evolution also widens retrieval scope (paper, abstract): each tag gives these roles more evidence.
+RETRIEVAL_UPDATE_RULES: dict[str, tuple[SpecialistRoleName, ...]] = {
+    "completeness_gap": ("treatment", "monitoring"),
+    "safety_gap": ("safety",),
+    "evidence_gap": ("diagnostic", "treatment"),
+    "traceability_gap": ("diagnostic", "treatment"),
+}
 
 
 def initial_state(config: AppConfig) -> EvolutionState:
@@ -35,6 +42,7 @@ def initial_state(config: AppConfig) -> EvolutionState:
             if config.agents.roles[role].weight is not None
         },
         prompt_refinements={role: [] for role in PROMPT_REFINEMENT_ROLES},
+        retrieval_top_k={role: config.retrieval.top_k for role in SPECIALIST_ROLES},
         history=[],
     )
 
@@ -71,6 +79,8 @@ def load_state(config: AppConfig) -> EvolutionState:
         state.role_weights.setdefault(role, baseline.role_weights[role])
     for role in PROMPT_REFINEMENT_ROLES:
         state.prompt_refinements.setdefault(role, [])
+    for role in SPECIALIST_ROLES:
+        state.retrieval_top_k.setdefault(role, baseline.retrieval_top_k[role])
     return state
 
 
@@ -85,8 +95,16 @@ def apply_feedback(config: AppConfig, state: EvolutionState, evaluation: Evaluat
     updated = state.model_copy(deep=True)
     weight_updates: dict[SpecialistRoleName, float] = {}
     prompt_updates: dict[RoleName, list[str]] = {}
+    retrieval_updates: dict[SpecialistRoleName, int] = {}
 
     for tag in evaluation.feedback_tags:
+        for role in RETRIEVAL_UPDATE_RULES.get(tag, ()):
+            current_k = updated.retrieval_top_k.get(role, config.retrieval.top_k)
+            widened = min(config.retrieval.max_top_k, current_k + 1)
+            if widened != current_k:
+                updated.retrieval_top_k[role] = widened
+                retrieval_updates[role] = widened
+
         for role, factor in WEIGHT_UPDATE_RULES.get(tag, {}).items():
             delta = round(config.evolution.weight_step * factor, 4)
             current = updated.role_weights[role]
@@ -110,6 +128,7 @@ def apply_feedback(config: AppConfig, state: EvolutionState, evaluation: Evaluat
             feedback_tags=evaluation.feedback_tags,
             weight_updates=weight_updates,
             prompt_updates=prompt_updates,
+            retrieval_updates=retrieval_updates,
         )
     )
     updated.history = updated.history[-config.evolution.max_history :]

@@ -419,4 +419,5 @@ def test_config(tmp_path):
     config = config.model_copy(deep=True)
     config.runtime.artifacts_dir = str(tmp_path / "artifacts")
     config.runtime.evolution_state_path = str(tmp_path / "artifacts" / "evolution_state.json")
+    config.retrieval.enabled = False  # Offline tests inject a fake KB where they need one.
     return config

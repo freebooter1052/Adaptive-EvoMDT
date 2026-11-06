@@ -10,7 +10,7 @@ SpecialistRoleName = Literal["diagnostic", "treatment", "safety", "monitoring"]
 TaskType = Literal["plan_eval", "generation", "mcq"]
 Severity = Literal["absolute", "major", "moderate", "minor", "info"]
 Stance = Literal["recommend", "consider", "avoid", "monitor"]
-SourceType = Literal["guideline", "literature", "dossier", "other"]
+SourceType = Literal["guideline", "literature", "drug_label", "dossier", "other"]
 ConflictType = Literal["semantic", "risk", "implementation"]
 SPECIALIST_ROLES: tuple[SpecialistRoleName, ...] = ("diagnostic", "treatment", "safety", "monitoring")
 
@@ -35,6 +35,7 @@ class Biomarker(BaseModel):
 
 
 class CitationProvenance(BaseModel):
+    evidence_id: str | None = None
     source_id: str | None = None
     anchor: str | None = None
     version: str | None = None
@@ -98,6 +99,7 @@ class AgentOutput(BaseModel):
     risks_or_alerts: list[RiskAlert] = Field(default_factory=list)
     confidence: float = Field(ge=0.0, le=1.0)
     supporting_facts: list[SupportingFact] = Field(default_factory=list)
+    answer_candidate: str = ""
 
 
 class PlanItem(BaseModel):
@@ -117,12 +119,16 @@ class ConflictRecord(BaseModel):
     conflict_type: ConflictType = "semantic"
     outcome: Literal["accepted", "rejected", "flagged"]
     rationale: str
+    severity_score: float | None = None
 
 
 class CoordinatorOutput(BaseModel):
     role: Literal["coordinator"] = "coordinator"
     summary: str
     final_answer: str = ""
+    diagnosis_and_staging: str = ""
+    safety_assessment: str = ""
+    monitoring_protocol: str = ""
     final_plan: list[PlanItem] = Field(default_factory=list)
     accepted_actions: list[str] = Field(default_factory=list)
     rejected_actions: list[str] = Field(default_factory=list)
@@ -136,6 +142,10 @@ class CoordinatorOutput(BaseModel):
 class CoordinatorDecision(BaseModel):
     final_plan: list[PlanItem] = Field(default_factory=list)
     final_answer: str
+    diagnosis_and_staging: str = ""
+    safety_assessment: str = ""
+    monitoring_protocol: str = ""
+    consensus: dict[str, Any] = Field(default_factory=dict)
     accepted_actions: list[str] = Field(default_factory=list)
     rejected_actions: list[str] = Field(default_factory=list)
     conflicts: list[ConflictRecord] = Field(default_factory=list)
@@ -158,11 +168,13 @@ class EvolutionEvent(BaseModel):
     feedback_tags: list[str]
     weight_updates: dict[SpecialistRoleName, float] = Field(default_factory=dict)
     prompt_updates: dict[RoleName, list[str]] = Field(default_factory=dict)
+    retrieval_updates: dict[SpecialistRoleName, int] = Field(default_factory=dict)
 
 
 class EvolutionState(BaseModel):
     role_weights: dict[SpecialistRoleName, float]
     prompt_refinements: dict[RoleName, list[str]]
+    retrieval_top_k: dict[SpecialistRoleName, int] = Field(default_factory=dict)
     history: list[EvolutionEvent] = Field(default_factory=list)
 
 
@@ -172,6 +184,8 @@ class AgentExecutionTrace(BaseModel):
     raw_content: str
     usage: dict[str, Any] = Field(default_factory=dict)
     parsed_output: AgentOutput | CoordinatorOutput
+    retrieved_evidence_ids: list[str] = Field(default_factory=list)
+    dropped_citations: int = 0
 
 
 class CaseRunResult(BaseModel):

@@ -80,6 +80,92 @@ PROMPT_PROFILES: dict[str, PromptProfile] = {
         ),
         dossier_label="structured biomedical task dossier",
     ),
+    # Paper, Table 2. The tools named there (DrugBank, Lexicomp, FAERS, survival or ML models) are not
+    # available to these agents, so the role logic is kept and EVIDENCE_RULES forbids claiming them.
+    "evomdt_oncology": PromptProfile(
+        specialist_prompts={
+            "diagnostic": (
+                "You are an expert diagnostic physician on an oncology multidisciplinary team. Analyze the patient "
+                "presentation using systematic clinical reasoning. Generate: (1) the primary diagnosis with a Bayesian "
+                "probability assessment based on symptom likelihood and disease prevalence; (2) ranked differential "
+                "diagnoses considering epidemiological factors, temporal patterns and risk profiles; (3) disease staging "
+                "using the applicable system (TNM, BCLC, Lugano or Ann Arbor) with anatomical and molecular assessment; "
+                "(4) recommended investigations prioritized by diagnostic yield, sensitivity and specificity, and "
+                "cost-effectiveness; (5) a confidence level calibrated to evidence strength and clinical uncertainty. "
+                "Apply dual-process reasoning combining pattern recognition with analytical hypothesis testing."
+            ),
+            "treatment": (
+                "You are an expert oncology therapeutics specialist on a multidisciplinary team. Develop a comprehensive "
+                "treatment plan using multi-criteria decision analysis, optimizing U(T) = sum of w_i * v_i(T) across: "
+                "(1) efficacy from guidelines and trial evidence, weighted by quality; (2) safety, including "
+                "pharmacogenomic factors when known; (3) sequencing across lines of therapy and disease progression; "
+                "(4) personalization for comorbidity, functional status, organ reserve and preferences; (5) expected "
+                "outcome. State the primary plan with drug, dose or schedule where the evidence supports it, name "
+                "alternatives, and give evidence grades and the strength of recommendation where the source provides them."
+            ),
+            "safety": (
+                "You are an expert clinical safety and pharmacovigilance specialist on an oncology multidisciplinary team. "
+                "Conduct a safety assessment that prioritizes patient protection. Evaluate: (1) risk stratification, using "
+                "validated scores when the dossier allows, with risk-factor interactions; (2) drug interactions, with "
+                "mechanism, pharmacokinetic and clinical significance; (3) contraindications classified as absolute, major, "
+                "moderate, minor or theoretical, with alternatives; (4) likely adverse events and predisposing factors; "
+                "(5) safety monitoring with surveillance intensity matched to risk. Prioritize safety over efficacy when "
+                "they conflict. Mark clearly unsafe actions as stance avoid, with a major or absolute risk alert."
+            ),
+            "monitoring": (
+                "You are an expert clinical monitoring and surveillance specialist on an oncology multidisciplinary team. "
+                "Develop an adaptive protocol that maximizes detection probability while minimizing patient burden and cost, "
+                "maximizing M(t) = sum of p_i(t) * s_i / c_i. Generate: (1) acute monitoring (0-3 months) with laboratory "
+                "checks, RECIST or iRECIST imaging, patient-reported outcomes and CTCAE v5.0 toxicity scoring; (2) "
+                "intermediate monitoring (3-12 months) with response-adapted changes; (3) long-term surveillance (over 12 "
+                "months) for recurrence, secondary malignancy, late effects and organ-specific follow-up; (4) rules for "
+                "changing the protocol as risk changes; (5) trigger thresholds and escalation points."
+            ),
+        },
+        coordinator_prompt=(
+            "You are an expert clinical decision coordinator. Synthesize the Diagnostic, Treatment, Safety and Monitoring "
+            "recommendations into one coherent MDT decision. Apply: (1) weighted consensus, using the supplied role weights "
+            "and confidences; (2) conflict detection, recording each semantic, risk or implementation conflict with its "
+            "outcome and rationale; (3) evidence integration across specialist domains; when sources diverge, follow this "
+            "policy in order: safety first, then higher certainty or strength, then guidance matched to the jurisdiction, "
+            "then recency; (4) coherence checks for timing, logic, clinical plausibility and feasibility; (5) calibrated "
+            "uncertainty. Prioritize safety in conflict resolution and log which options were accepted or rejected and why. "
+            "Write final_answer as one conclusion-first paragraph beginning 'Based on a comprehensive multidisciplinary "
+            "evaluation', naming the diagnosis and stage, the primary treatment and the key follow-up. Fill "
+            "diagnosis_and_staging, safety_assessment and monitoring_protocol with short implementable text."
+        ),
+        dossier_label="standardized MDT case dossier",
+    ),
+    "evomdt_benchmark": PromptProfile(
+        specialist_prompts={
+            "diagnostic": (
+                "You are an expert diagnostic physician answering a medical question as part of a multidisciplinary team. "
+                "Use systematic clinical reasoning: extract the decisive findings, weigh the likely diagnoses or mechanisms "
+                "by likelihood, and combine pattern recognition with analytical hypothesis testing."
+            ),
+            "treatment": (
+                "You are an expert therapeutics specialist answering a medical question as part of a multidisciplinary team. "
+                "Weigh efficacy, safety, sequencing and patient-specific factors, and commit to the best-supported answer."
+            ),
+            "safety": (
+                "You are an expert clinical safety and pharmacovigilance specialist answering a medical question as part of a "
+                "multidisciplinary team. Check the reasoning for drug toxicities, contraindications and dangerous assumptions, "
+                "then give the answer you judge correct after that check."
+            ),
+            "monitoring": (
+                "You are an expert clinical monitoring specialist answering a medical question as part of a multidisciplinary "
+                "team. Consider disease course, complications, follow-up and prognosis, and how each bears on the question, "
+                "then give the answer you judge correct."
+            ),
+        },
+        coordinator_prompt=(
+            "You are an expert clinical decision coordinator. Synthesize the specialists' answers into one final answer, using "
+            "the supplied weighted consensus and each agent's reasoning. Record conflicts and how they were resolved, and "
+            "prioritize safety. Follow any output contract exactly. With no contract, write final_answer as a direct, accurate "
+            "answer to the question in plain clinical prose, of about the length a physician would give, with no preamble."
+        ),
+        dossier_label="medical question",
+    ),
 }
 
 SPECIALIST_JSON_SCHEMA_INSTRUCTIONS = (
@@ -94,7 +180,9 @@ SPECIALIST_JSON_SCHEMA_INSTRUCTIONS = (
     "supporting_facts must contain field_path, value, note, citations. "
     "Use confidence as a numeric value from 0.0 to 1.0. "
     "Each citation object must contain source_id, anchor, version, evidence_grade, year, source_type. "
-    "When you do not have provenance, return citations as an empty list."
+    "When you do not have provenance, return citations as an empty list. "
+    "Also return answer_candidate: your own answer to the question "
+    "(the option label if options are given, otherwise one short sentence)."
 )
 
 COORDINATOR_JSON_SCHEMA_INSTRUCTIONS = (
@@ -108,12 +196,23 @@ COORDINATOR_JSON_SCHEMA_INSTRUCTIONS = (
     "supporting_facts must contain field_path, value, note, citations. "
     "Use final_confidence as a numeric value from 0.0 to 1.0. "
     "Each citation object must contain source_id, anchor, version, evidence_grade, year, source_type. "
+    "diagnosis_and_staging, safety_assessment and monitoring_protocol are optional short strings. "
     "Do not include markdown fences."
 )
 
 NO_RAG_INSTRUCTIONS = (
     "This run is no-RAG. You must not claim to have retrieved documents, guidelines, or papers. "
     "You may reason from the structured dossier and prior agent outputs only."
+)
+
+EVIDENCE_RULES = (
+    "Retrieved evidence is supplied with the task, each snippet labelled with an ID such as [E1a2b3c4d]. "
+    "Weigh it critically and use your own medical knowledge as well: a snippet may be off-topic, and then you should ignore it. "
+    "To cite a snippet, add {\"evidence_id\": \"<ID>\"} to the citations list of the relevant item. "
+    "Cite only IDs that were supplied: any other citation is discarded. Never invent a source, trial or guideline. "
+    "An item with no supporting snippet takes an empty citations list. "
+    "Do not claim to have queried any database, or to have run any statistical or machine-learning model. "
+    "Missing dossier values are 'not available': do not infer or impute them, and state how they limit the decision."
 )
 
 PROMPT_METADATA_ALLOWLIST: tuple[str, ...] = ("task_context", "prompt_context", "dataset", "source", "tags")
@@ -259,48 +358,81 @@ def case_prompt_payload(case: CaseDossier) -> dict[str, object]:
     return _compact_dict(payload)
 
 
-def build_system_prompt(case: CaseDossier, role: SpecialistRoleName, refinement_ids: list[str]) -> str:
+def build_system_prompt(
+    case: CaseDossier,
+    role: SpecialistRoleName,
+    refinement_ids: list[str],
+    *,
+    with_evidence: bool = False,
+) -> str:
     profile = prompt_profile_for(case)
-    parts = [profile.specialist_prompts[role], SPECIALIST_JSON_SCHEMA_INSTRUCTIONS, NO_RAG_INSTRUCTIONS]
+    parts = [
+        profile.specialist_prompts[role],
+        SPECIALIST_JSON_SCHEMA_INSTRUCTIONS,
+        EVIDENCE_RULES if with_evidence else NO_RAG_INSTRUCTIONS,
+    ]
     parts.extend(_contract_parts(case))
     parts.extend(active_refinements(role, refinement_ids))
     return "\n\n".join(parts)
 
 
-def build_user_prompt(case: CaseDossier, role: SpecialistRoleName) -> str:
+def build_user_prompt(case: CaseDossier, role: SpecialistRoleName, evidence_text: str | None = None) -> str:
     profile = prompt_profile_for(case)
     contract_text = output_contract_instructions(case)
     prompt_payload = case_prompt_payload(case)
-    prompt = (
-        f"Role: {role}\n"
-        f"Work only from this {profile.dossier_label}.\n\n"
-        f"{json.dumps(prompt_payload, indent=2, ensure_ascii=False)}"
+    source_line = (
+        f"Work from this {profile.dossier_label} and the retrieved evidence below."
+        if evidence_text is not None
+        else f"Work only from this {profile.dossier_label}."
     )
+    prompt = f"Role: {role}\n{source_line}\n\n{json.dumps(prompt_payload, indent=2, ensure_ascii=False)}"
+    if evidence_text is not None:
+        prompt = f"{prompt}\n\nRetrieved evidence:\n{evidence_text or '(none retrieved)'}"
     if not contract_text:
         return prompt
     return f"{prompt}\n\nTask output contract:\n{contract_text}"
 
 
-def build_coordinator_system_prompt(case: CaseDossier, refinement_ids: list[str]) -> str:
+def build_coordinator_system_prompt(
+    case: CaseDossier,
+    refinement_ids: list[str],
+    *,
+    with_evidence: bool = False,
+) -> str:
     profile = prompt_profile_for(case)
-    parts = [profile.coordinator_prompt, COORDINATOR_JSON_SCHEMA_INSTRUCTIONS, NO_RAG_INSTRUCTIONS]
+    parts = [
+        profile.coordinator_prompt,
+        COORDINATOR_JSON_SCHEMA_INSTRUCTIONS,
+        EVIDENCE_RULES if with_evidence else NO_RAG_INSTRUCTIONS,
+    ]
     parts.extend(_contract_parts(case))
     parts.extend(active_refinements("coordinator", refinement_ids))
     return "\n\n".join(parts)
 
 
-def build_coordinator_user_prompt(case: CaseDossier, specialist_outputs: list[AgentOutput]) -> str:
-    payload = {
+def build_coordinator_user_prompt(
+    case: CaseDossier,
+    specialist_outputs: list[AgentOutput],
+    *,
+    evidence_text: str | None = None,
+    consensus: dict[str, object] | None = None,
+) -> str:
+    payload: dict[str, object] = {
         "case": case_prompt_payload(case),
         "specialist_outputs": [output.model_dump(mode="json") for output in specialist_outputs],
     }
+    if consensus is not None:
+        payload["weighted_consensus"] = consensus
     contract_text = output_contract_instructions(case)
+    source_line = "Use this payload and the retrieved evidence below." if evidence_text is not None else "Use only this payload."
     body = (
         "Role: coordinator\n"
         "Synthesize the specialist outputs into a final answer and supporting plan.\n"
-        "Use only this payload.\n\n"
+        f"{source_line}\n\n"
         f"{json.dumps(payload, indent=2, ensure_ascii=False)}"
     )
+    if evidence_text is not None:
+        body = f"{body}\n\nRetrieved evidence:\n{evidence_text or '(none retrieved)'}"
     if not contract_text:
         return body
     return f"{body}\n\nTask output contract:\n{contract_text}"

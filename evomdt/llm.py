@@ -71,10 +71,16 @@ class OpenAIChatProvider:
         messages: list[ChatMessage],
         parser: Callable[[str], T],
     ) -> LLMTrace:
+        options: dict[str, Any] = {}
+        if self.config.temperature is not None:
+            options["temperature"] = self.config.temperature
+        if self.config.seed is not None:
+            options["seed"] = self.config.seed
         completion = await self.client.chat.completions.create(
             model=self.config.model_name,
             messages=[message.model_dump() for message in messages],
             response_format={"type": "json_object"},
+            **options,
         )
         raw_content = completion.choices[0].message.content or ""
         parsed = parser(raw_content)

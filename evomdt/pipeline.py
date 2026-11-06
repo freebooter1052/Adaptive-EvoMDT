@@ -9,7 +9,8 @@ from time import perf_counter
 from .artifacts import inspect_run as read_run_summary
 from .artifacts import save_case_run
 from .config import AppConfig
-from .consensus import apply_safety_guardrail, deterministic_coordinator
+from .consensus import apply_safety_guardrail, deterministic_coordinator, weighted_consensus
+from .contracts import resolve_output_contract
 from .evaluation import aggregate_benchmark_results, evaluate_case
 from .evolution import apply_feedback, initial_state, load_state, save_state
 from .io import iter_dataset_tasks, load_case, write_json
@@ -19,6 +20,7 @@ from .models import (
     AgentOutput,
     CaseDossier,
     CaseRunResult,
+    CitationProvenance,
     CoordinatorOutput,
     EvolutionState,
     SPECIALIST_ROLES,
@@ -27,8 +29,33 @@ from .models import (
 )
 from .normalization import normalize_agent_output_payload, normalize_coordinator_output_payload
 from .prompts import build_coordinator_system_prompt, build_coordinator_user_prompt, build_system_prompt, build_user_prompt
+from .retrieval import EvidenceSnippet, KnowledgeBase, render_evidence, retrieve_for_role
 
 LOGGER = logging.getLogger("evomdt.pipeline")
+
+
+def _bind_citations(citations: list[CitationProvenance], evidence: dict[str, EvidenceSnippet]) -> tuple[list[CitationProvenance], int]:
+    """Keep citations that name retrieved evidence, with full provenance. Everything else is dropped."""
+    bound: dict[str, CitationProvenance] = {}
+    dropped = 0
+    for citation in citations:
+        # Models often put the supplied ID in source_id, since the citation schema names that field.
+        snippet = evidence.get(citation.evidence_id or "") or evidence.get(citation.source_id or "")
+        if snippet is None:
+            dropped += 1
+            continue
+        bound[snippet.evidence_id] = snippet.citation()
+    return list(bound.values()), dropped
+
+
+def _bind_output_citations(output: AgentOutput | CoordinatorOutput, evidence: dict[str, EvidenceSnippet]) -> int:
+    holders: list = list(output.supporting_facts)
+    holders += output.candidate_actions if isinstance(output, AgentOutput) else output.final_plan
+    dropped = 0
+    for holder in holders:
+        holder.citations, count = _bind_citations(holder.citations, evidence)
+        dropped += count
+    return dropped
 
 
 class EvoMDTSystem:
@@ -36,24 +63,39 @@ class EvoMDTSystem:
         self,
         config: AppConfig,
         provider_factory: Callable[[str], StructuredLLM] | None = None,
+        knowledge_base: KnowledgeBase | None = None,
     ):
         self.config = config
         self.provider_factory = provider_factory or self._default_provider_factory
+        self.knowledge_base = knowledge_base
+        if self.knowledge_base is None and config.retrieval.enabled:
+            self.knowledge_base = KnowledgeBase(config.retrieval)
 
     def _default_provider_factory(self, model_key: str) -> StructuredLLM:
         return OpenAIChatProvider(self.config.llm_for(model_key))
+
+    async def _retrieve(self, case: CaseDossier, role: SpecialistRoleName, state: EvolutionState) -> list[EvidenceSnippet] | None:
+        if self.knowledge_base is None:
+            return None
+        top_k = state.retrieval_top_k.get(role, self.config.retrieval.top_k)
+        return await asyncio.to_thread(retrieve_for_role, self.knowledge_base, case, role, top_k)
 
     async def _run_specialist(
         self,
         case: CaseDossier,
         role: SpecialistRoleName,
         refinement_ids: list[str],
-    ) -> AgentExecutionTrace:
+        state: EvolutionState,
+    ) -> tuple[AgentExecutionTrace, list[EvidenceSnippet]]:
         role_config = self.config.agents.roles[role]
         provider = self.provider_factory(role_config.llm)
+        evidence = await self._retrieve(case, role, state)
         messages = [
-            ChatMessage(role="system", content=build_system_prompt(case, role, refinement_ids)),
-            ChatMessage(role="user", content=build_user_prompt(case, role)),
+            ChatMessage(role="system", content=build_system_prompt(case, role, refinement_ids, with_evidence=evidence is not None)),
+            ChatMessage(
+                role="user",
+                content=build_user_prompt(case, role, render_evidence(evidence) if evidence is not None else None),
+            ),
         ]
         trace = await provider.generate_structured(
             messages,
@@ -62,12 +104,20 @@ class EvoMDTSystem:
         parsed_output = AgentOutput.model_validate(trace.parsed)
         if parsed_output.role != role:
             parsed_output.role = role
-        return AgentExecutionTrace(
-            role=role,
-            model_name=trace.model_name,
-            raw_content=trace.raw_content,
-            usage=trace.usage,
-            parsed_output=parsed_output,
+        dropped = 0
+        if evidence is not None:
+            dropped = _bind_output_citations(parsed_output, {item.evidence_id: item for item in evidence})
+        return (
+            AgentExecutionTrace(
+                role=role,
+                model_name=trace.model_name,
+                raw_content=trace.raw_content,
+                usage=trace.usage,
+                parsed_output=parsed_output,
+                retrieved_evidence_ids=[item.evidence_id for item in evidence or []],
+                dropped_citations=dropped,
+            ),
+            evidence or [],
         )
 
     async def _run_coordinator(
@@ -75,12 +125,22 @@ class EvoMDTSystem:
         case: CaseDossier,
         outputs: list[AgentOutput],
         refinement_ids: list[str],
+        evidence: dict[str, EvidenceSnippet] | None,
+        role_weights: dict[SpecialistRoleName, float],
     ) -> AgentExecutionTrace:
         role_config = self.config.agents.roles["coordinator"]
         provider = self.provider_factory(role_config.llm)
+        evidence_text = render_evidence(list(evidence.values()), max_chars=600) if evidence is not None else None
+        consensus = weighted_consensus(case, outputs, role_weights) if resolve_output_contract(case) is not None else None
         messages = [
-            ChatMessage(role="system", content=build_coordinator_system_prompt(case, refinement_ids)),
-            ChatMessage(role="user", content=build_coordinator_user_prompt(case, outputs)),
+            ChatMessage(
+                role="system",
+                content=build_coordinator_system_prompt(case, refinement_ids, with_evidence=evidence is not None),
+            ),
+            ChatMessage(
+                role="user",
+                content=build_coordinator_user_prompt(case, outputs, evidence_text=evidence_text, consensus=consensus),
+            ),
         ]
         trace = await provider.generate_structured(
             messages,
@@ -89,12 +149,15 @@ class EvoMDTSystem:
             ),
         )
         parsed_output = CoordinatorOutput.model_validate(trace.parsed)
+        dropped = _bind_output_citations(parsed_output, evidence) if evidence is not None else 0
         return AgentExecutionTrace(
             role="coordinator",
             model_name=trace.model_name,
             raw_content=trace.raw_content,
             usage=trace.usage,
             parsed_output=parsed_output,
+            retrieved_evidence_ids=list(evidence or {}),
+            dropped_citations=dropped,
         )
 
     async def run_case(
@@ -109,24 +172,30 @@ class EvoMDTSystem:
         refinement_ids_by_role = state.prompt_refinements
 
         if self.config.agents.parallel:
-            traces = await asyncio.gather(
+            specialist_runs = await asyncio.gather(
                 *[
-                    self._run_specialist(case, role, refinement_ids_by_role.get(role, []))
+                    self._run_specialist(case, role, refinement_ids_by_role.get(role, []), state)
                     for role in SPECIALIST_ROLES
                 ]
             )
         else:
-            traces = []
+            specialist_runs = []
             for role in SPECIALIST_ROLES:
-                traces.append(await self._run_specialist(case, role, refinement_ids_by_role.get(role, [])))
+                specialist_runs.append(await self._run_specialist(case, role, refinement_ids_by_role.get(role, []), state))
 
+        traces = [run[0] for run in specialist_runs]
         outputs = [trace.parsed_output for trace in traces]
+        evidence: dict[str, EvidenceSnippet] | None = None
+        if self.knowledge_base is not None:
+            evidence = {item.evidence_id: item for _, snippets in specialist_runs for item in snippets}
         coordinator_trace: AgentExecutionTrace | None = None
         try:
             coordinator_trace = await self._run_coordinator(
                 case,
                 outputs,
                 refinement_ids_by_role.get("coordinator", []),
+                evidence,
+                state.role_weights,
             )
             traces.append(coordinator_trace)
             coordinator_decision = apply_safety_guardrail(

@@ -5,7 +5,7 @@ from statistics import mean
 from typing import Any
 
 from .config import AppConfig
-from .consensus import normalize_action
+from .consensus import actions_match, normalize_action
 from .contracts import is_allowed_answer, normalize_answer, resolve_output_contract
 from .models import AgentOutput, CaseDossier, CitationProvenance, CoordinatorDecision, EvaluationResult
 
@@ -48,14 +48,14 @@ def weighted_plan_concordance(case: CaseDossier, decision: CoordinatorDecision) 
     if not reference_items:
         return None
 
-    predicted_actions = {normalize_action(item.action) for item in decision.final_plan}
     reference_weight_total = sum(_priority_weight(item["priority"]) for item in reference_items)
     if reference_weight_total == 0:
         return None
 
+    # Plans word the same action differently, so exact string equality would score every real plan 0.
     matched_weight = 0.0
     for item in reference_items:
-        if normalize_action(item["action"]) in predicted_actions:
+        if any(actions_match(item["action"], planned.action) for planned in decision.final_plan):
             matched_weight += _priority_weight(item["priority"])
     return round(matched_weight / reference_weight_total, 4)
 
@@ -245,7 +245,10 @@ def _legacy_evaluate_case(
     if isinstance(traceability, float) and traceability < 0.5:
         feedback_tags.append("evidence_gap")
 
-    if not any(output.role == "monitoring" and output.candidate_actions for output in outputs):
+    # Exam-style answers need no follow-up plan, so this gap applies to care plans only.
+    if case.task_type == "plan_eval" and not any(
+        output.role == "monitoring" and output.candidate_actions for output in outputs
+    ):
         feedback_tags.append("monitoring_gap")
 
     bertscore = metrics.get("bertscore_f1")
@@ -254,7 +257,7 @@ def _legacy_evaluate_case(
 
     accuracy = metrics.get("accuracy")
     if accuracy == 0.0:
-        feedback_tags.append("treatment_gap")
+        feedback_tags.append("accuracy_gap")
 
     feedback_tags = list(dict.fromkeys(feedback_tags))
     return EvaluationResult(

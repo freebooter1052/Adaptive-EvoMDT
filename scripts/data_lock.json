@@ -1,4 +1,31 @@
 {
+  "data/raw/drug_labels/abemaciclib.json": {
+    "sha256": "05fcc163affeb63269b3aa4580289c8cd0b803ee036d75f697fcdc1af8934186",
+    "size": 224006,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"abemaciclib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/alectinib.json": {
+    "sha256": "ce05a64ef5ddb4b0d28494ca10500125ea5ac1281da35cfc0587043a7287feed",
+    "size": 147326,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"alectinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/anastrozole.json": {
+    "sha256": "f87a7c4366b39e734ec742c7b67980e8390145e4b86876fea3e97a3f787a1e34",
+    "size": 14924341,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"anastrozole\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
   "data/raw/drug_labels/atezolizumab.json": {
     "sha256": "3368dd9bd3859cc2262ae0ba5ceb0ec273ec5b8d7a7abad60a1d475832695054",
     "size": 749212,
@@ -17,6 +44,24 @@
     "redistributable": "yes",
     "note": ""
   },
+  "data/raw/drug_labels/bleomycin.json": {
+    "sha256": "84e715b3321d94442ea65a27943b60da7821f00dbf4d6ff5f970c67136a2ebf7",
+    "size": 422800,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"bleomycin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/brentuximab_vedotin.json": {
+    "sha256": "b05fb44ec417e2f54e58c493f4833ae07ab040bf02b03238d12625e124657485",
+    "size": 349342,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"brentuximab vedotin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
   "data/raw/drug_labels/cabozantinib.json": {
     "sha256": "155bcaee4efd50f851f5f430995edd5b9d6972fbc89e41cc106a37816226e7cf",
     "size": 451135,
@@ -26,11 +71,56 @@
     "redistributable": "yes",
     "note": ""
   },
+  "data/raw/drug_labels/capecitabine.json": {
+    "sha256": "9730c89d98a13b6462e5a31586443ddfff932c1ac405d75737bee92acd12a40c",
+    "size": 10741844,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"capecitabine\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/carboplatin.json": {
+    "sha256": "f59621ba043bab32ae88f4a2b378f8ba74194368f528cc1a2d2f1ed23836a07e",
+    "size": 3674889,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"carboplatin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
   "data/raw/drug_labels/cisplatin.json": {
     "sha256": "041a1cc81e239afe05590c3638d92c9652337b30d99c6a399472811c47f7d6f4",
     "size": 859002,
     "retrieved": "2026-11-05",
     "source": "openFDA drug label API, generic name or product elements: \"cisplatin\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/cyclophosphamide.json": {
+    "sha256": "c2569a0bcb5cbdf9a1fbaf45be88ec15b10f6d153aaa71bdc433422a743d3857",
+    "size": 3503363,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"cyclophosphamide\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/dacarbazine.json": {
+    "sha256": "f96d08f56540a9f62694e367381f4e76f69cc941e606e6269688bb5943398dca",
+    "size": 116514,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"dacarbazine\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/docetaxel.json": {
+    "sha256": "8100db20f36a085e83a866e150f9bacde14d55f7617eb9353c58193a12cadf32",
+    "size": 20517795,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"docetaxel\"",
     "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
     "redistributable": "yes",
     "note": ""
@@ -53,6 +143,42 @@
     "redistributable": "yes",
     "note": ""
   },
+  "data/raw/drug_labels/entecavir.json": {
+    "sha256": "1d09d7c4f5be7b7d4cec1871b2dd3343b9d228d2aa89c673b33f33befc7a9ad0",
+    "size": 5626086,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"entecavir\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/erlotinib.json": {
+    "sha256": "6287f9cc9fc52b553a9034d4c886f80e02c5838019cbb733eb7564a718fc1426",
+    "size": 2629826,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"erlotinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/gefitinib.json": {
+    "sha256": "e8fa5f6d8df6ef0d6cec3695271a36a6e73ed92df08d5d8db021d195d6221b3e",
+    "size": 444993,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"gefitinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/ibrutinib.json": {
+    "sha256": "5c875a48c6fc818ade5e672baf4bfd921c4f358ae2398dd63b7117258254fee6",
+    "size": 324924,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"ibrutinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
   "data/raw/drug_labels/ipilimumab.json": {
     "sha256": "6eb060b3b11b5416c90d51d934b8c8513589f4e6306bc8bffddefb2d8bbd3963",
     "size": 540983,
@@ -67,6 +193,24 @@
     "size": 324561,
     "retrieved": "2026-11-05",
     "source": "openFDA drug label API, generic name or product elements: \"lenvatinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/letrozole.json": {
+    "sha256": "c0abf16290bb294bda3485d7bb7e3e0506c551656a789a6fa8b0c4ba6cfe1117",
+    "size": 9132893,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"letrozole\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/methotrexate.json": {
+    "sha256": "83268017f56ea76e63be10bf9be628753e079c487820d3b08cf74054f90c8efc",
+    "size": 9821129,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"methotrexate\"",
     "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
     "redistributable": "yes",
     "note": ""
@@ -89,11 +233,74 @@
     "redistributable": "yes",
     "note": ""
   },
+  "data/raw/drug_labels/osimertinib.json": {
+    "sha256": "4149df1cc68eb0b93d135a76be4cb911ccfa4b3f39cba693faa3b606bd86e174",
+    "size": 320411,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"osimertinib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/paclitaxel.json": {
+    "sha256": "796a4e652b5191c6c084fd62a660cbdc116c111049d74639456b0013c5469807",
+    "size": 10918651,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"paclitaxel\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/palbociclib.json": {
+    "sha256": "8e73b0f6ed165ef0a1a98931e28332fc07f3dac42c1645bbdec5050b08686bd9",
+    "size": 1035545,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"palbociclib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/pembrolizumab.json": {
+    "sha256": "6ebbbb3647abfec0a4c880d0d24218bd0190b4178efad7f62601c73e58ae485c",
+    "size": 2115583,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"pembrolizumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/pemetrexed.json": {
+    "sha256": "e4bcfe0efcb89b5b9ef1850a4e801396669c0aa657f8dee351fce5f52b3f996f",
+    "size": 9666706,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"pemetrexed\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/pertuzumab.json": {
+    "sha256": "677b49b85abd12bdbf6c4f615966c91ca035292d0d98160ae5cd89479002c021",
+    "size": 260132,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"pertuzumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
   "data/raw/drug_labels/regorafenib.json": {
     "sha256": "4e07c4f6f26ef5d191129563a613b346b5d3c174030b14b9fe132a1815cd1b5f",
     "size": 178713,
     "retrieved": "2026-11-05",
     "source": "openFDA drug label API, generic name or product elements: \"regorafenib\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/rituximab.json": {
+    "sha256": "0f889204a13acedb69f31179f8708ea7c3180dbd009497742f56291f7e14de51",
+    "size": 1136640,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"rituximab\"",
     "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
     "redistributable": "yes",
     "note": ""
@@ -107,11 +314,56 @@
     "redistributable": "yes",
     "note": ""
   },
+  "data/raw/drug_labels/tamoxifen.json": {
+    "sha256": "578bfd108e398559b6a81817301f7d5c1a7a3813be66f4efba1c78a982097ba0",
+    "size": 12108848,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"tamoxifen\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/tenofovir_disoproxil_fumarate.json": {
+    "sha256": "134f11bf17d8d0c3940eb47c80cc36697e81f8ee6ae49128a29d786422c29e51",
+    "size": 41917090,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"tenofovir disoproxil fumarate\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/trastuzumab.json": {
+    "sha256": "500eac0f98adb079ff0ac65d3c54b7f31c5c37385bca8110ae24322cd3a8d610",
+    "size": 2530531,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"trastuzumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
   "data/raw/drug_labels/tremelimumab.json": {
     "sha256": "ad9b52f5ce587a09630eb95f42794f62e78a7f417312fdf3aec12276f4d3b7e1",
     "size": 193691,
     "retrieved": "2026-11-05",
     "source": "openFDA drug label API, generic name or product elements: \"tremelimumab\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/vinblastine.json": {
+    "sha256": "19b45718f6f58ca7fa9916dd66f73afa148fe729918ed3a72a512920bc7121f1",
+    "size": 109928,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"vinblastine\"",
+    "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
+    "redistributable": "yes",
+    "note": ""
+  },
+  "data/raw/drug_labels/vincristine.json": {
+    "sha256": "cf327e9030fd3f9e393ffc515c5cc18a7bcb4363908f8e4b8cc0ccf14e123690",
+    "size": 260883,
+    "retrieved": "2026-11-06",
+    "source": "openFDA drug label API, generic name or product elements: \"vincristine\"",
     "licence": "Public domain, CC0 1.0 (open.fda.gov/license)",
     "redistributable": "yes",
     "note": ""
@@ -188,6 +440,78 @@
     "redistributable": "no",
     "note": ""
   },
+  "data/raw/open_guidelines/breast_abc8_2026.pdf": {
+    "sha256": "dbdbe1af8429fe86365436b8c137c95d1fc6b87128a4686a5c9ca2654a44aca0",
+    "size": 234266243,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC13697336.1: ABC8 advanced breast cancer consensus, Breast 2026",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_asco_metastatic_2024.pdf": {
+    "sha256": "2d3c317d1383b8257ed4137c2badeb5fd612faa89d38161d28a0b40e3d0603ef",
+    "size": 805321,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC10793992.1: ASCO resource-stratified metastatic breast cancer guideline, JCO Glob Oncol 2024",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_csbrs_conserving_2021.pdf": {
+    "sha256": "014edf818d3dcee5bd2eb23982dd1b2aa2dbecb479788ce7a7a7ad8965595ae8",
+    "size": 175543,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC8478397.1: CSBrS breast-conserving surgery guideline, Chin Med J 2021",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_csbrs_invasive_2021.pdf": {
+    "sha256": "9ddd67cd2d74c86cb6ed7d719d1dd71c75d7ab79c07f3f8408c91b214bea072d",
+    "size": 201143,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC8116006.1: CSBrS invasive breast cancer guideline, Chin Med J 2021",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_csbrs_neoadjuvant_2024.pdf": {
+    "sha256": "58f5f37a1589086af247690b6aba4d4ddeb5ba82607e7df57c63dfe0c3027194",
+    "size": 408519,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC11188867.1: CSBrS neoadjuvant therapy guideline, Chin Med J 2024",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_her2_positive_2021.pdf": {
+    "sha256": "bd2231e8312f94b2ac36f0c9444e5d37a294bc0ff2ba6700deeabae23e8f430e",
+    "size": 1602662,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC7982071.1: HER2-positive breast cancer consensus, Bosn J Basic Med Sci 2021",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_hr_positive_early_2023.pdf": {
+    "sha256": "ea75cc617a0bae9b6606ffefc8ce59a91c5e18b6951ff333f9e77c1a28904ba3",
+    "size": 1189215,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC10391857.1: HR-positive HER2-negative early breast cancer consensus, BMC Cancer 2023",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/breast_radiotherapy_cee_2022.pdf": {
+    "sha256": "6203a133541916cf986bc6dd7f09372f475ff070ae955cbe740b199b63cbc364",
+    "size": 759895,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9272418.1: Central-Eastern European breast radiotherapy guideline, Pathol Oncol Res 2022",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
   "data/raw/open_guidelines/bsg_hcc_2024.pdf": {
     "sha256": "fe35166855c6bffedc772191ad0a3f4a4365753e7bed8e312ca9551597e53360",
     "size": 1483045,
@@ -211,6 +535,159 @@
     "size": 3963638,
     "retrieved": "2026-11-05",
     "source": "PMC Cloud Service PMC9597235.1: KLCA-NCC Korea HCC guideline, Clin Mol Hepatol 2022",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_biomarkers_2023.pdf": {
+    "sha256": "7dc7c6170b941d7e4f4fea8f2ed23fd1d6113012594bd4d1e3ec8b12bcc9661f",
+    "size": 1296431,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC10119050.1: NSCLC predictive biomarker testing guideline, Clin Transl Oncol 2023",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_egfr_early_2023.pdf": {
+    "sha256": "1e732b9ec08f18ca1b3f2ee3840b3ade642972573b38035aa2d8fecc32277144",
+    "size": 398676,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9813031.1: Early-stage EGFR-mutated NSCLC Delphi consensus, Clin Transl Oncol 2023",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_egfr_resistance_2024.pdf": {
+    "sha256": "19983c0666eaab30e386a05b7e877e8cc1f3706e5fdead83702690bca401d511",
+    "size": 1457942,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC11697410.1: Management after third-generation EGFR-TKI resistance, Lancet Reg Health West Pac 2024",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_goecp_seor_rt_2022.pdf": {
+    "sha256": "c4c8d3f39290b6e4bf2dd270d81181781e975b30322619e35a83fc5320d85b86",
+    "size": 699991,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9052073.1: GOECP/SEOR NSCLC radiotherapy guideline, World J Clin Oncol 2022",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_periop_consensus_2022.pdf": {
+    "sha256": "2910bfcc2a95516b26440a31d7cea7f52a446ffd493903b9ba5e8163839b33f5",
+    "size": 406935,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9359944.1: Perioperative NSCLC expert consensus, Transl Lung Cancer Res 2022",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_periop_nsclc_2025.pdf": {
+    "sha256": "3096215f5f8d1519c69a9bda84a06eaed992273bb200647d5a1a5a1dbe582aea",
+    "size": 341248,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC12574511.1: Perioperative multimodality NSCLC guideline, Chin Med J 2025",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_rt_metastatic_2022.pdf": {
+    "sha256": "d919a8fdd4e39156d756f1851915911ae43de63db822d8a3ff462a114cba74a1",
+    "size": 507950,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9554677.1: Radiotherapy in metastatic NSCLC consensus, Transl Lung Cancer Res 2022",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lung_sitc_immunotherapy_2022.pdf": {
+    "sha256": "15f11a5ff04469d90469b6579d75f0789d8061b2f1c653ae66546dd3bf0c34b3",
+    "size": 1387287,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9157337.1: SITC lung cancer immunotherapy guideline, J Immunother Cancer 2022",
+    "licence": "CC BY-NC (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_bsh_lbcl_2024.pdf": {
+    "sha256": "78dd365c8c743908f45e0d0f9d3f19c683618575b0b183a6acae823aceecd32e",
+    "size": 396366,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC7616447.1: BSH newly diagnosed large B-cell lymphoma guideline, Br J Haematol 2024",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_eha_follicular_2026.pdf": {
+    "sha256": "e889b556bf32bbae7cce911d6ca14975c04e1065e9f65f20ee9f1db035607dd2",
+    "size": 1861064,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC13680546.1: EHA follicular lymphoma guideline, Hemasphere 2026",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_eha_hodgkin_2026.pdf": {
+    "sha256": "082d31e13e279bebdf20bf042504780d54a91bbbb97e0ffbe6cf187404cd0fbd",
+    "size": 657895,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC13288861.1: EHA Hodgkin lymphoma guideline, Hemasphere 2026",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_eha_lbcl_2025.pdf": {
+    "sha256": "ca8631485b1c26a123480a18800f06b3971af83140ace5c43a7405560d629704",
+    "size": 974195,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC12456099.1: EHA large B-cell lymphoma guideline, Hemasphere 2025",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_eha_mantle_2025.pdf": {
+    "sha256": "cbc7fcb82bf7b934811211ea75900bef7fbbc79600de24bc3082fe6dc24bc555",
+    "size": 666647,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC12541557.1: EHA-EU MCL network guideline, Hemasphere 2025",
+    "licence": "CC BY-NC-ND (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_jsh_overview_2025.pdf": {
+    "sha256": "3b886336d417a3736acc9f5f7ba7824fcf1f91308c18401cf7a5aa5885d4d55d",
+    "size": 414272,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC12014710.1: JSH lymphoma guideline overview, Int J Hematol 2025",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_pcnsl_china_2022.pdf": {
+    "sha256": "c683b36d811900346d4c6a73a562b2d6ed1ee89908b494c6b3755a63a30b61ca",
+    "size": 1708967,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC9524012.1: Primary CNS lymphoma consensus, J Hematol Oncol 2022",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_seom_dlbcl_2023.pdf": {
+    "sha256": "0956a177858da40d2b104f5819b46682f4ddb48938a5df42eaf5a28e285de712",
+    "size": 968501,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC10425474.1: SEOM-GOTEL DLBCL guideline, Clin Transl Oncol 2023",
+    "licence": "CC BY (per PMC metadata)",
+    "redistributable": "yes (non-commercial, with attribution)",
+    "note": ""
+  },
+  "data/raw/open_guidelines/lymphoma_sitc_immunotherapy_2020.pdf": {
+    "sha256": "fe8e5badb8d9dbdce6aacf0f24d12f9777ac1157cb53a284e0a7d91d88f2b47e",
+    "size": 574940,
+    "retrieved": "2026-11-06",
+    "source": "PMC Cloud Service PMC7768967.1: SITC lymphoma immunotherapy guideline, J Immunother Cancer 2020",
     "licence": "CC BY-NC (per PMC metadata)",
     "redistributable": "yes (non-commercial, with attribution)",
     "note": ""

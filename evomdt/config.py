@@ -11,6 +11,18 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from .models import RoleName, SPECIALIST_ROLES
 
 
+def load_env_file(path: Path) -> None:
+    """Read KEY=VALUE lines into the environment. Values already set in the environment win."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.split(" #")[0].strip().strip("\"'"))
+
+
 class LLMConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -18,6 +30,8 @@ class LLMConfig(BaseModel):
     api_key: str | None = None
     base_url: str
     model_name: str
+    temperature: float | None = None
+    seed: int | None = None
 
     @model_validator(mode="after")
     def resolve_api_key(self) -> "LLMConfig":
@@ -81,6 +95,20 @@ class EvolutionConfig(BaseModel):
     max_history: int = 200
 
 
+class RetrievalConfig(BaseModel):
+    """Paper defaults: hybrid retrieval weighted 0.8 semantic, 0.2 keyword."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    kb_dir: str = "data/kb"
+    embedding_model: str = "BAAI/bge-m3"
+    dense_weight: float = 0.8
+    sparse_weight: float = 0.2
+    top_k: int = 5
+    max_top_k: int = 9
+
+
 class LoggingConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -96,10 +124,12 @@ class AppConfig(BaseModel):
     evaluation: EvaluationConfig
     evolution: EvolutionConfig
     logging: LoggingConfig
+    retrieval: RetrievalConfig = Field(default_factory=RetrievalConfig)
 
     @classmethod
     def load(cls, path: str | Path) -> "AppConfig":
         config_path = Path(path)
+        load_env_file(config_path.resolve().parent / ".env")
         with config_path.open("rb") as handle:
             raw = tomllib.load(handle)
         return cls(
@@ -109,6 +139,7 @@ class AppConfig(BaseModel):
             evaluation=raw.get("evaluation", {}),
             evolution=raw.get("evolution", {}),
             logging=raw.get("logging", {}),
+            retrieval=raw.get("retrieval", {}),
         )
 
     def llm_for(self, key: str) -> LLMConfig:

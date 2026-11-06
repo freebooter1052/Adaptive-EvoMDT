@@ -1,0 +1,7 @@
+cancer,condition,n,rouge1_recall,rougeL_recall,rouge1_over_candidate,rougeL_over_candidate,cosine_similarity,bertscore_f1,ai_score_0_10,ai_score_median,ai_score_n,weighted_plan_concordance
+Breast,evomdt,3,0.5147,0.3355,0.0672,0.0445,0.6766,0.6525,,,0,
+Breast,random,3,0.4384,0.351,0.4401,0.3486,0.8354,0.7702,,,0,
+Breast,simple,3,0.0,0.0,0.0,0.0,0.5261,0.5436,,,0,
+HCC,evomdt,3,0.6712,0.5961,0.0829,0.0721,0.6372,0.6593,,,0,
+HCC,random,3,0.3204,0.3204,0.3121,0.3121,0.6939,0.6974,,,0,
+HCC,simple,3,0.0,0.0,0.0,0.0,0.5278,0.5455,,,0,

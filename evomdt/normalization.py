@@ -136,10 +136,17 @@ def _coerce_citations(value: Any) -> list[dict[str, Any]]:
         return []
     citations: list[dict[str, Any]] = []
     for item in value:
+        # Retrieval-backed runs ask agents to cite evidence IDs, which models may return as bare strings.
+        if isinstance(item, str):
+            if item.strip():
+                citations.append({"evidence_id": item.strip().strip("[]")})
+            continue
         if not isinstance(item, dict):
             continue
+        evidence_id = item.get("evidence_id") or item.get("id")
         citations.append(
             {
+                "evidence_id": str(evidence_id).strip("[] ") if evidence_id else None,
                 "source_id": item.get("source_id"),
                 "anchor": item.get("anchor"),
                 "version": item.get("version"),
@@ -353,6 +360,7 @@ def normalize_agent_output_payload(payload: Any, role: SpecialistRoleName) -> di
         "risks_or_alerts": _coerce_risks_or_alerts(raw.get("risks_or_alerts")),
         "confidence": _coerce_confidence(raw.get("confidence")),
         "supporting_facts": _coerce_supporting_facts(raw.get("supporting_facts")),
+        "answer_candidate": _stringify(raw.get("answer_candidate") or raw.get("answer")),
     }
 
 
@@ -367,6 +375,9 @@ def normalize_coordinator_output_payload(payload: Any, case: CaseDossier) -> dic
         "role": "coordinator",
         "summary": _stringify(raw.get("summary") or raw.get("conclusion") or "Normalized coordinator output."),
         "final_answer": _stringify(raw.get("final_answer") or raw.get("answer") or raw.get("decision")),
+        "diagnosis_and_staging": _stringify(raw.get("diagnosis_and_staging")),
+        "safety_assessment": _stringify(raw.get("safety_assessment")),
+        "monitoring_protocol": _stringify(raw.get("monitoring_protocol")),
         "final_plan": final_plan,
         "accepted_actions": accepted_actions,
         "rejected_actions": _coerce_string_list(raw.get("rejected_actions")),
