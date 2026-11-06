@@ -251,18 +251,18 @@ async def run_judges(args: argparse.Namespace) -> None:
             random_refs = shuffled_references(cases) if cases else {}
             for index, case in enumerate(cases):
                 result = evomdt.get(case["case_id"])
-                if result is None:
+                if result is None or (model != args.models[0] and index >= args.second_judge_per_cancer):
                     continue
                 meta = case["metadata"]
                 items = "\n".join(f"{i}. {item['action']}" for i, item in enumerate(meta["reference_plan"], 1))
                 conditions = {"evomdt": plan_text(result)}
-                # The first judge scores every arm; further judges score EvoMDT, for inter-rater agreement.
-                # The invalid-text baseline needs only a sample: it exists to show the scale's floor.
+                # The first judge scores every arm; further judges score a sample of EvoMDT, for agreement.
+                # The random and invalid-text baselines need only a sample: they exist to show the scale's floor.
                 if model == args.models[0]:
-                    if index < args.arms_per_cancer:
+                    if index < args.random_per_cancer:
                         conditions["random"] = random_refs[case["case_id"]]
-                        if case["case_id"] in single:
-                            conditions["single"] = single[case["case_id"]]["final_answer"]
+                    if case["case_id"] in single:
+                        conditions["single"] = single[case["case_id"]]["final_answer"]
                     if index < args.simple_per_cancer:
                         conditions["simple"] = SIMPLE_BASELINE
                 for condition, candidate in conditions.items():
@@ -470,6 +470,31 @@ def judge_scores(models: list[str], condition: str, case_id: str) -> list[dict]:
     return found
 
 
+def judge_agreement(models: list[str]) -> dict:
+    """How closely the second judge's 0-10 scores track the primary judge's, on the cases both scored."""
+    from scipy.stats import spearmanr
+
+    if len(models) < 2:
+        return {}
+    pairs = []
+    for cases in layer2_cases().values():
+        for case in cases:
+            judged = [judge_scores([model], "evomdt", case["case_id"]) for model in models[:2]]
+            if all(judged):
+                pairs.append([float(judged[0][0]["score"]), float(judged[1][0]["score"])])
+    if len(pairs) < 3:
+        return {"n": len(pairs)}
+    matrix = np.array(pairs)
+    icc, low, high = icc_with_ci(matrix)
+    rho = spearmanr(matrix[:, 0], matrix[:, 1]).statistic
+    return {
+        "n": len(pairs), "primary": models[0], "second": models[1],
+        "primary_mean": round(float(matrix[:, 0].mean()), 3), "second_mean": round(float(matrix[:, 1].mean()), 3),
+        "icc_2_1": round(icc, 3), "icc_ci95": [round(low, 3), round(high, 3)],
+        "spearman": None if math.isnan(rho) else round(float(rho), 3),
+    }
+
+
 def covered_weight(case: dict, judged: list[dict]) -> float | None:
     """Weighted plan concordance: judged coverage of the reference items, weighted by priority."""
     items = case["metadata"]["reference_plan"]
@@ -523,7 +548,7 @@ def score_layer2(models: list[str], single_system: str | None, encoders: dict[st
             reverse = [scorer.score(text, ref) for ref, text in zip(kept_refs, kept_texts)]
             ai_scores, coverage = [], []
             for case in kept_cases:
-                judged = judge_scores(models, condition, case["case_id"])
+                judged = judge_scores(models[:1], condition, case["case_id"])
                 ai_scores.append(float(np.mean([float(r["score"]) for r in judged])) if judged else None)
                 coverage.append(covered_weight(case, judged))
             for index, case in enumerate(kept_cases):
@@ -663,19 +688,25 @@ def collect_ratings(models: list[str]) -> list[dict]:
     return rows
 
 
-def analyse_ratings(rows: list[dict], *, prefix: str) -> dict:
+def analyse_ratings(rows: list[dict], *, prefix: str, primary: str | None = None) -> dict:
     """The paper's Layer 3 analysis (Table 1; Fig. 4a, c-f), for physician ratings or the LLM proxy."""
     from scipy.stats import kruskal, mannwhitneyu, spearmanr
 
     if not rows:
         return {}
     raters = sorted({row["rater"] for row in rows})
+    every_rater = [row for row in rows if row["plan"] == "evomdt"]
+    # With a primary rater, a second rater who scored only a sample cannot skew the means or tests.
+    rows = [row for row in rows if primary is None or row["rater"] == primary]
     evomdt = [row for row in rows if row["plan"] == "evomdt"]
-    out: dict = {"raters": raters, "cases": len({row["case_id"] for row in evomdt})}
+    out: dict = {
+        "raters": raters, "primary_rater": primary, "cases": len({row["case_id"] for row in evomdt}),
+        "cases_per_rater": {rater: len({row["case_id"] for row in every_rater if row["rater"] == rater}) for rater in raters},
+    }
 
     table = []
     for cancer in CANCERS:
-        part = [row for row in evomdt if row["cancer"] == cancer]
+        part = [row for row in every_rater if row["cancer"] == cancer]
         if not part:
             continue
         overall: dict[str, object] = {"Cancer": CANCER_LABEL[cancer], "Dimension": "Overall (/5)"}
@@ -721,7 +752,7 @@ def analyse_ratings(rows: list[dict], *, prefix: str) -> dict:
     if len(raters) > 1:
         out["icc_2_1"] = {}
         for dimension in DIMENSIONS:
-            lookup = {(row["case_id"], row["rater"]): row["score"] for row in evomdt if row["dimension"] == dimension}
+            lookup = {(row["case_id"], row["rater"]): row["score"] for row in every_rater if row["dimension"] == dimension}
             complete = [case for case in composite if all((case, rater) in lookup for rater in raters)]
             if len(complete) > 2:
                 matrix = np.array([[lookup[(case, rater)] for rater in raters] for case in complete])
@@ -777,7 +808,7 @@ def representative_cases(models: list[str]) -> str:
     for cancer, cases in layer2_cases().items():
         scored = []
         for case in cases:
-            judged = judge_scores(models, "evomdt", case["case_id"])
+            judged = judge_scores(models[:1], "evomdt", case["case_id"])
             if case["case_id"] in evomdt and judged:
                 scored.append((float(np.mean([float(r["score"]) for r in judged])), case))
         if not scored:
@@ -1026,7 +1057,7 @@ def report(args: argparse.Namespace) -> None:
         encoder.close()
     hcc = score_hcc_tace(args.models)
     timing = timing_summary()
-    proxy = analyse_ratings(collect_ratings(args.models), prefix="layer3_llm_proxy")
+    proxy = analyse_ratings(collect_ratings(args.models), prefix="layer3_llm_proxy", primary=args.models[0])
     physician = {}
     if args.physician_ratings:
         with open(args.physician_ratings, encoding="utf-8-sig") as handle:
@@ -1051,7 +1082,8 @@ def report(args: argparse.Namespace) -> None:
         "knowledge_base": {k: v for k, v in json.loads(kb_path.read_text(encoding="utf-8")).items() if k != "by_source"} if kb_path.exists() else {},
         "evolution": {key: state.get(key) for key in ("role_weights", "prompt_refinements", "retrieval_top_k")} | {"events": len(state.get("history", []))},
         "failures": {p.parent.name: len(json.loads(p.read_text(encoding="utf-8"))) for p in RUNS.glob("*/failures.json") if not p.parent.name.startswith("pilot")},
-        "judges": args.models,
+        "judges": {"primary_all_arms": args.models[0], "second_sample_only": args.models[1:]},
+        "judge_agreement_ai_score": judge_agreement(args.models),
     }
     (RESULTS / "summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
     make_figures(layer1, layer2, physician or proxy, systems, names, timing, "physician" if physician else "llm_proxy")
@@ -1061,9 +1093,10 @@ def report(args: argparse.Namespace) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("step", choices=["judge", "report"])
-    parser.add_argument("--models", nargs="+", default=["mistralai/mistral-large-4-1t-a52b", "minimaxai/minimax-m3.1-flash"])
-    parser.add_argument("--simple-per-cancer", type=int, default=25)
-    parser.add_argument("--arms-per-cancer", type=int, default=50, help="Judged cases per cancer for the random and single-agent arms.")
+    parser.add_argument("--models", nargs="+", default=["minimaxai/minimax-m3.1-flash", "mistralai/mistral-large-4-1t-a52b"], help="The first judge scores every arm, and the others a sample.")
+    parser.add_argument("--simple-per-cancer", type=int, default=10)
+    parser.add_argument("--random-per-cancer", type=int, default=25)
+    parser.add_argument("--second-judge-per-cancer", type=int, default=10)
     parser.add_argument("--baselines", nargs="*", default=["single:nvidia/nemotron-3-ultra-550b-a55b", "single:mistralai/mistral-large-4-1t-a52b"])
     parser.add_argument("--single", default="single:nvidia/nemotron-3-ultra-550b-a55b")
     parser.add_argument("--qwen", default="Qwen/Qwen3-Embedding-0.6B")

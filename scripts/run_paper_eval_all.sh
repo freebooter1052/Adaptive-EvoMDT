@@ -28,18 +28,19 @@ if [ ! -f "$LOG/evolution_state.json" ]; then
   tail -12 "$LOG/evolve.log"
 fi
 
-# The judges and the single-agent arm use little of the backbone's capacity, so they run beside EvoMDT.
-step "Layer 2: single-agent backbone and first judge pass (in the background)"
-"$PY" scripts/run_paper_eval.py run --system "single:$BACKBONE" --files $REAL $RUN_CAP --concurrency 4 --rpm 15 > "$LOG/single_real.log" 2>&1 &
-SINGLE=$!
-"$PY" scripts/score_paper_eval.py judge $SCORE_CAP --concurrency 6 > "$LOG/judge.log" 2>&1 &
-JUDGES=$!
-
+# The single-agent arm shares EvoMDT's model and mostly gets 429s beside it, so it runs afterwards.
 step "Layer 2: EvoMDT"
 "$PY" scripts/run_paper_eval.py run --system evomdt --files $REAL $RUN_CAP --concurrency 10 --rpm 40 --timeout 600 > "$LOG/evomdt_real.log" 2>&1
 tail -1 "$LOG/evomdt_real.log"
-wait $SINGLE
+
+step "Layer 2: single-agent backbone"
+"$PY" scripts/run_paper_eval.py run --system "single:$BACKBONE" --files $REAL $RUN_CAP --concurrency 8 --rpm 30 > "$LOG/single_real.log" 2>&1
 tail -1 "$LOG/single_real.log"
+
+# The judges use other models, so they can run beside any remaining work.
+step "judges, Layer 2 (in the background)"
+"$PY" scripts/score_paper_eval.py judge $SCORE_CAP --concurrency 6 > "$LOG/judge.log" 2>&1 &
+JUDGES=$!
 
 if [ "$RUN_EXTRAS" = "1" ]; then
   BASELINES="$BASELINES single:mistralai/mistral-large-4-1t-a52b"
