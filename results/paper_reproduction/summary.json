@@ -1,0 +1,252 @@
+{
+ "layer1": {
+  "medqa": {},
+  "medqa_cancer": {},
+  "medmcqa_cancer": {},
+  "medquad": {},
+  "rond": {}
+ },
+ "layer2": {
+  "breast_cancer": {
+   "planned": 3,
+   "completed": 3,
+   "evomdt": {
+    "n": 3,
+    "rouge1_recall": 0.5147,
+    "rougeL_recall": 0.3355,
+    "rouge1_over_candidate": 0.0672,
+    "rougeL_over_candidate": 0.0445,
+    "cosine_similarity": 0.6766,
+    "bertscore_f1": 0.6525,
+    "ai_score_0_10": null,
+    "ai_score_median": null,
+    "ai_score_n": 0,
+    "weighted_plan_concordance": null
+   },
+   "random": {
+    "n": 3,
+    "rouge1_recall": 0.4384,
+    "rougeL_recall": 0.351,
+    "rouge1_over_candidate": 0.4401,
+    "rougeL_over_candidate": 0.3486,
+    "cosine_similarity": 0.8354,
+    "bertscore_f1": 0.7702,
+    "ai_score_0_10": null,
+    "ai_score_median": null,
+    "ai_score_n": 0,
+    "weighted_plan_concordance": null
+   },
+   "simple": {
+    "n": 3,
+    "rouge1_recall": 0.0,
+    "rougeL_recall": 0.0,
+    "rouge1_over_candidate": 0.0,
+    "rougeL_over_candidate": 0.0,
+    "cosine_similarity": 0.5261,
+    "bertscore_f1": 0.5436,
+    "ai_score_0_10": null,
+    "ai_score_median": null,
+    "ai_score_n": 0,
+    "weighted_plan_concordance": null
+   },
+   "pipeline": {
+    "evidence_traceability": 0.7358,
+    "safety_violation_rate": 0.0,
+    "guardrail_removals": 0,
+    "coordinator_fallbacks": 0,
+    "dropped_citations": 0,
+    "median_seconds": 830.3,
+    "median_tokens": 51096
+   }
+  },
+  "hepatocellular_carcinoma": {
+   "planned": 3,
+   "completed": 3,
+   "evomdt": {
+    "n": 3,
+    "rouge1_recall": 0.6712,
+    "rougeL_recall": 0.5961,
+    "rouge1_over_candidate": 0.0829,
+    "rougeL_over_candidate": 0.0721,
+    "cosine_similarity": 0.6372,
+    "bertscore_f1": 0.6593,
+    "ai_score_0_10": null,
+    "ai_score_median": null,
+    "ai_score_n": 0,
+    "weighted_plan_concordance": null
+   },
+   "random": {
+    "n": 3,
+    "rouge1_recall": 0.3204,
+    "rougeL_recall": 0.3204,
+    "rouge1_over_candidate": 0.3121,
+    "rougeL_over_candidate": 0.3121,
+    "cosine_similarity": 0.6939,
+    "bertscore_f1": 0.6974,
+    "ai_score_0_10": null,
+    "ai_score_median": null,
+    "ai_score_n": 0,
+    "weighted_plan_concordance": null
+   },
+   "simple": {
+    "n": 3,
+    "rouge1_recall": 0.0,
+    "rougeL_recall": 0.0,
+    "rouge1_over_candidate": 0.0,
+    "rougeL_over_candidate": 0.0,
+    "cosine_similarity": 0.5278,
+    "bertscore_f1": 0.5455,
+    "ai_score_0_10": null,
+    "ai_score_median": null,
+    "ai_score_n": 0,
+    "weighted_plan_concordance": null
+   },
+   "pipeline": {
+    "evidence_traceability": 0.5385,
+    "safety_violation_rate": 0.0,
+    "guardrail_removals": 2,
+    "coordinator_fallbacks": 0,
+    "dropped_citations": 0,
+    "median_seconds": 727.2,
+    "median_tokens": 52206
+   }
+  },
+  "lung_adenocarcinoma": {
+   "planned": 3,
+   "completed": 0
+  },
+  "lymphoma": {
+   "planned": 3,
+   "completed": 0
+  }
+ },
+ "layer2_per_cancer_cap": 3,
+ "extraction_audit": {
+  "auditor": "mistralai/mistral-large-4-1t-a52b",
+  "audited_whole_pool": 58,
+  "audited_in_cohort": 2,
+  "plan_faithful_in_cohort": 2,
+  "dossier_faithful_in_cohort": 2,
+  "no_leak_in_cohort": 2,
+  "flagged_plans_excluded": [],
+  "scores": [
+   {
+    "condition": "evomdt",
+    "cases": "all cases",
+    "n": 6,
+    "ai_score": null,
+    "wpc": null,
+    "cosine_similarity": 0.6569,
+    "bertscore_f1": 0.6559,
+    "rouge1_recall": 0.593
+   },
+   {
+    "condition": "evomdt",
+    "cases": "without flagged plans",
+    "n": 6,
+    "ai_score": null,
+    "wpc": null,
+    "cosine_similarity": 0.6569,
+    "bertscore_f1": 0.6559,
+    "rouge1_recall": 0.593
+   }
+  ]
+ },
+ "hcc_tace_guideline_concordance": {},
+ "layer3_llm_proxy": {},
+ "layer3_physician": "not run: needs physician raters",
+ "timing_layer2_evomdt": {
+  "n": 6,
+  "median_min": 13.18,
+  "iqr_min": [
+   12.36,
+   13.7
+  ],
+  "mean_min": 14.5,
+  "sd_min": 4.24
+ },
+ "cohort_flow": {
+  "breast_cancer": {
+   "candidates": 1064,
+   "screened": 192,
+   "not_eligible": 54,
+   "treatment_leaked_into_dossier": 4,
+   "quote_not_in_report": 6,
+   "kept": 128
+  },
+  "hepatocellular_carcinoma": {
+   "candidates": 326,
+   "screened": 192,
+   "not_eligible": 60,
+   "treatment_leaked_into_dossier": 5,
+   "quote_not_in_report": 8,
+   "kept": 119
+  },
+  "lung_adenocarcinoma": {
+   "candidates": 456,
+   "screened": 192,
+   "not_eligible": 35,
+   "quote_not_in_report": 13,
+   "treatment_leaked_into_dossier": 4,
+   "kept": 140
+  },
+  "lymphoma": {
+   "candidates": 2302,
+   "screened": 192,
+   "quote_not_in_report": 14,
+   "not_eligible": 61,
+   "treatment_leaked_into_dossier": 1,
+   "kept": 116
+  }
+ },
+ "knowledge_base": {
+  "embedding_model": "BAAI/bge-m3",
+  "atoms": 4860,
+  "by_cancer": {
+   "breast": 366,
+   "hcc": 956,
+   "lung": 646,
+   "lymphoma": 502,
+   "pan": 2390
+  },
+  "with_evidence_grade": 79,
+  "excluded": {
+   "NCCN guidelines": "EULA forbids use with any AI model or tool",
+   "recist_1_1.pdf, irecist_sciencedirect_abstract_page.pdf": "Elsevier copyright, text-mining licence only"
+  }
+ },
+ "evolution": {
+  "role_weights": {
+   "diagnostic": 1.05,
+   "treatment": 1.15,
+   "safety": 1.0,
+   "monitoring": 1.0
+  },
+  "prompt_refinements": {
+   "diagnostic": [
+    "evidence_gap"
+   ],
+   "treatment": [
+    "treatment_gap",
+    "evidence_gap"
+   ],
+   "safety": [],
+   "monitoring": [],
+   "coordinator": []
+  },
+  "retrieval_top_k": {
+   "diagnostic": 7,
+   "treatment": 7,
+   "safety": 5,
+   "monitoring": 5
+  },
+  "events": 8
+ },
+ "failures": {
+  "pilot_nemotron35_super": 0
+ },
+ "judges": [
+  "mistralai/mistral-large-4-1t-a52b",
+  "minimaxai/minimax-m3.1-flash"
+ ]
+}

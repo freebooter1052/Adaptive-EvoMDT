@@ -1,0 +1,3 @@
+condition,cases,n,ai_score,wpc,cosine_similarity,bertscore_f1,rouge1_recall
+evomdt,all cases,6,,,0.6569,0.6559,0.593
+evomdt,without flagged plans,6,,,0.6569,0.6559,0.593

@@ -1,0 +1,16 @@
+paper/
+__pycache__/
+.pytest_cache/
+.venv/
+artifacts/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# External data stays out of git. data/* rather than data/ so MANIFEST.md can be re-included;
+# git cannot re-include a file whose parent directory is excluded.
+data/*
+!data/MANIFEST.md
+!data/samples/

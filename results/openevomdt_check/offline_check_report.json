@@ -1,0 +1,209 @@
+{
+  "run_case_hcc": {
+    "run_id": "20261103T132505+0000_sample-hcc-001",
+    "duration_seconds": 0.0025,
+    "agents_run": [
+      "diagnostic",
+      "treatment",
+      "safety",
+      "monitoring",
+      "coordinator"
+    ],
+    "final_answer": "Recommend limited curative-intent resection, antiviral therapy, and structured surveillance.",
+    "accepted_actions": [
+      "Laparoscopic liver resection",
+      "Entecavir antiviral therapy",
+      "CT or MRI plus AFP every 3 months in year 1"
+    ],
+    "rejected_actions": [
+      "Major hepatectomy"
+    ],
+    "conflicts": [
+      {
+        "action": "Major hepatectomy",
+        "objectors": [
+          "safety"
+        ],
+        "outcome": "rejected"
+      }
+    ],
+    "metrics": {
+      "weighted_plan_concordance": 1.0,
+      "guideline_concordance": 1.0,
+      "safety_violation_rate": 0.0,
+      "evidence_traceability_coverage": 0.0
+    }
+  },
+  "run_case_biomedical": {
+    "run_id": "20261103T132505+0000_bio-hot-fever-001",
+    "duration_seconds": 0.0017,
+    "agents_run": [
+      "diagnostic",
+      "treatment",
+      "safety",
+      "monitoring",
+      "coordinator"
+    ],
+    "final_answer": "A",
+    "accepted_actions": [
+      "Escalate to urgent clinical assessment"
+    ],
+    "rejected_actions": [
+      "Provide reassurance only"
+    ],
+    "conflicts": [],
+    "metrics": {
+      "format_compliance": 1.0,
+      "supporting_fact_coverage": 0.5,
+      "audit_trace_coverage": 1.0,
+      "safety_escalation_coverage": 1.0,
+      "accuracy": 1.0,
+      "traceability_score": 0.75
+    }
+  },
+  "run_benchmark_hcc": {
+    "cases": 2,
+    "aggregate_metrics": {
+      "weighted_plan_concordance": 1.0,
+      "guideline_concordance": 1.0,
+      "safety_violation_rate": 0.0,
+      "evidence_traceability_coverage": 0.0
+    },
+    "run_ids": [
+      "20261103T132505+0000_sample-hcc-001",
+      "20261103T132505+0000_sample-breast-002"
+    ]
+  },
+  "run_benchmark_biomedical": {
+    "cases": 2,
+    "aggregate_metrics": {
+      "format_compliance": 0.5,
+      "supporting_fact_coverage": 0.375,
+      "audit_trace_coverage": 1.0,
+      "safety_escalation_coverage": 1.0,
+      "evidence_traceability_coverage": 0.0,
+      "accuracy": 0.5,
+      "traceability_score": 0.4584
+    },
+    "run_ids": [
+      "20261103T132505+0000_bio-hot-fever-001",
+      "20261103T132505+0000_bio-low-fever-002"
+    ]
+  },
+  "evolve_baseline_weights": 1.0,
+  "evolve_biomedical": {
+    "updated_cases": 2,
+    "role_weights": {
+      "diagnostic": 1.1,
+      "treatment": 1.1,
+      "safety": 1.0,
+      "monitoring": 1.0
+    },
+    "prompt_refinements": {
+      "diagnostic": [
+        "traceability_gap",
+        "accuracy_gap"
+      ],
+      "treatment": [
+        "traceability_gap",
+        "accuracy_gap"
+      ],
+      "safety": [],
+      "monitoring": [],
+      "coordinator": [
+        "format_gap"
+      ]
+    },
+    "history_entries": 2
+  },
+  "inspect_run": {
+    "keys": [
+      "agent_traces",
+      "artifacts_dir",
+      "case",
+      "coordinator_decision",
+      "duration_seconds",
+      "evaluation",
+      "run_id"
+    ],
+    "run_id_matches": true
+  },
+  "guardrail_unsafe_coordinator": {
+    "run_id": "20261103T132505+0000_sample-hcc-001",
+    "duration_seconds": 0.0023,
+    "agents_run": [
+      "diagnostic",
+      "treatment",
+      "safety",
+      "monitoring",
+      "coordinator"
+    ],
+    "final_answer": "Recommend limited curative-intent resection, antiviral therapy, and structured surveillance.",
+    "accepted_actions": [
+      "Laparoscopic liver resection",
+      "Entecavir antiviral therapy",
+      "CT or MRI plus AFP every 3 months in year 1"
+    ],
+    "rejected_actions": [
+      "Major hepatectomy"
+    ],
+    "conflicts": [
+      {
+        "action": "Major hepatectomy",
+        "objectors": [
+          "safety"
+        ],
+        "outcome": "rejected"
+      }
+    ],
+    "metrics": {
+      "weighted_plan_concordance": 1.0,
+      "guideline_concordance": 1.0,
+      "safety_violation_rate": 0.0,
+      "evidence_traceability_coverage": 0.0
+    }
+  },
+  "fallback_crashing_coordinator": {
+    "run_id": "20261103T132505+0000_sample-hcc-001",
+    "duration_seconds": 0.0034,
+    "agents_run": [
+      "diagnostic",
+      "treatment",
+      "safety",
+      "monitoring"
+    ],
+    "final_answer": "Fallback coordinator summary generated from specialist actions.",
+    "accepted_actions": [
+      "Laparoscopic liver resection",
+      "Entecavir antiviral therapy",
+      "Pre-operative surgical fitness assessment",
+      "CT or MRI plus AFP every 3 months in year 1"
+    ],
+    "rejected_actions": [
+      "Major hepatectomy"
+    ],
+    "conflicts": [
+      {
+        "action": "Major hepatectomy",
+        "objectors": [
+          "safety"
+        ],
+        "outcome": "flagged"
+      },
+      {
+        "action": "Major hepatectomy",
+        "objectors": [
+          "safety"
+        ],
+        "outcome": "rejected"
+      }
+    ],
+    "metrics": {
+      "weighted_plan_concordance": 1.0,
+      "guideline_concordance": 0.8,
+      "safety_violation_rate": 0.0,
+      "evidence_traceability_coverage": 0.0
+    }
+  },
+  "real_provider_without_key": "ValueError: Missing API key for model 'deepseek-chat'. Set DEEPSEEK_API_KEY."
+}

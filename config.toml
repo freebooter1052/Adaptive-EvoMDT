@@ -1,0 +1,70 @@
+[llm."deepseek/deepseek-chat"]
+api_key_env = "DEEPSEEK_API_KEY"
+base_url = "https://api.deepseek.com"
+model_name = "deepseek-chat"
+
+[llm."openai/gpt-5.4"]
+api_key_env = "ZENMUX_API_KEY"
+base_url = "https://zenmux.ai/api/v1"
+model_name = "openai/gpt-5.4"
+
+# The paper's backbone is DeepSeek V3/R1. To use DeepSeek, set a valid DEEPSEEK_API_KEY in .env and
+# change the llm of each role below to "deepseek/deepseek-chat".
+[llm."nim/nemotron-3-ultra"]
+api_key_env = "NIM_API_KEY"
+base_url = "https://integrate.api.nvidia.com/v1"
+model_name = "nvidia/nemotron-3-ultra-550b-a55b"
+temperature = 0.0
+seed = 7
+
+[runtime]
+default_llm = "nim/nemotron-3-ultra"
+artifacts_dir = "artifacts"
+evolution_state_path = "artifacts/evolution_state.json"
+
+[agents]
+parallel = true
+
+[agents.roles.diagnostic]
+llm = "nim/nemotron-3-ultra"
+weight = 1.0
+
+[agents.roles.treatment]
+llm = "nim/nemotron-3-ultra"
+weight = 1.0
+
+[agents.roles.safety]
+llm = "nim/nemotron-3-ultra"
+weight = 1.0
+
+[agents.roles.monitoring]
+llm = "nim/nemotron-3-ultra"
+weight = 1.0
+
+[agents.roles.coordinator]
+llm = "nim/nemotron-3-ultra"
+
+[retrieval]
+enabled = true
+kb_dir = "data/kb"
+embedding_model = "BAAI/bge-m3"
+dense_weight = 0.8
+sparse_weight = 0.2
+top_k = 5
+max_top_k = 9
+
+[evaluation]
+enable_llm_judge = false
+enable_bertscore = false
+judge_llm = "deepseek/deepseek-chat"
+bertscore_model_type = "distilbert-base-uncased"
+bertscore_lang = "en"
+
+[evolution]
+enabled = true
+max_weight_delta = 0.15
+weight_step = 0.05
+max_history = 200
+
+[logging]
+level = "INFO"
